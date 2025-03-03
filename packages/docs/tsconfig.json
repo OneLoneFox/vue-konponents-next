@@ -6,5 +6,7 @@
 		{
 			"path": "../konponents-next"
 		}
-	]
+	],
+	"include": [".vitepress/**/*.ts", ".vitepress/**/*.vue"],
+	"exclude": [".vitepress/cache"]
 }
