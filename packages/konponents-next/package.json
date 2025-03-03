@@ -3,15 +3,20 @@
   "private": false,
   "version": "0.0.1",
   "type": "module",
-  "main": "./dist/konponents-next.umd.cjs",
-  "module": "./dist/konponents-next.js",
+  "main": "./dist/vue-konponents-next.umd.cjs",
+  "module": "./dist/vue-konponents-next.js",
   "types": "./dist/src/main.d.ts",
   "license": "MIT",
+  "files": [
+    "src/",
+    "dist/"
+  ],
   "exports": {
     ".": {
-      "import": "./dist/konponents-next.js",
-      "require": "./dist/konponents-next.umd.cjs"
-    }
+      "import": "./dist/vue-konponents-next.js",
+      "require": "./dist/vue-konponents-next.umd.cjs"
+    },
+    "./styles.css": "./dist/vue-konponents-next.css"
   },
   "scripts": {
     "dev": "vite",
