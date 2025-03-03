@@ -3,6 +3,7 @@ import { type TemplateChildNode } from "@vue/compiler-core";
 import autoprefixer from "autoprefixer";
 import nesting from "postcss-nesting";
 import { defineConfig } from "vite";
+import dts from "vite-plugin-dts";
 
 function removeTestDataAttributes(node: TemplateChildNode) {
 	if (node.type !== 1 /* ELEMENT */) return;
@@ -32,6 +33,7 @@ export default defineConfig(({ mode }) => ({
 			entry: "src/main.ts",
 			name: "vue-konponents-next",
 			fileName: "vue-konponents-next",
+			cssFileName: "vue-konponents-next",
 		},
 		rollupOptions: {
 			external: ["vue"],
