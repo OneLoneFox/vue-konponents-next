@@ -1,0 +1,34 @@
+:root{
+	--kon-primary: #000;
+	--kon-primary-rgb: 0,0,0;
+	--kon-on-primary: #000;
+	--kon-on-primary-rgb: 0,0,0;
+	--kon-primary-container: #000;
+	--kon-primary-container: 0,0,0;
+	--kon-on-primary-container: #000;
+	--kon-on-primary-container: 0,0,0;
+}
+
+:where(html, [kon-theme="light"]){
+	/* Neutral key */
+	--kon-background: #f7f6f9;
+	--kon-background-rgb: 247, 246, 249;
+	--kon-on-background: #000;
+	--kon-on-background-rgb: 0,0,0;
+	--kon-surface: #FFF;
+	--kon-surface-rgb: 255,255,255;
+	--kon-on-surface: #000;
+	--kon-on-surface-rgb: 0,0,0;
+
+	/* Neutral variant */
+	--kon-surface-variant: #f6f6f6;
+	--kon-surface-variant-rgb: 246, 246, 246;
+	--kon-on-surface-variant: #000;
+	--kon-on-surface-variant-rgb: 0,0,0;
+
+}
+
+[kon-theme="dark"]{
+	--kon-surface-variant: #333842;
+	--kon-surface-variant-rgb: 51, 56, 66;
+}

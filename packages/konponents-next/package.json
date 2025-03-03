@@ -1,0 +1,36 @@
+{
+  "name": "konponents-next",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/konponents-next.umd.cjs",
+  "module": "./dist/konponents-next.js",
+  "types": "./dist/konponents-next.d.ts",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/konponents-next.js",
+      "require": "./dist/konponents-next.umd.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .ts,.vue --fix --ignore-path .gitignore",
+    "test": "cypress open"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "5.2.1",
+    "autoprefixer": "^10.4.13",
+    "cypress": "14.1.0",
+    "postcss-nesting": "13.0.1",
+    "typescript": "5.8.2",
+    "typescript-eslint": "^8.25.0",
+    "vite": "6.2.0",
+    "vue-tsc": "2.2.8"
+  }
+}

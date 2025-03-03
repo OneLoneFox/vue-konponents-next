@@ -1,0 +1,198 @@
+.kon-button{
+    --font-size: .8rem;
+    --radius: 12px;
+    --padding: 8px 12px;
+    --icon-margin: 12px;
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--icon-margin);
+    padding: var(--padding);
+    background: var(--kon-primary);
+    color: var(--kon-on-primary);
+    border-radius: var(--radius);
+    font-size: var(--font-size);
+    overflow: hidden;
+    cursor: pointer;
+    transition-property: box-shadow, transform, background-color, border-radius, border, color;
+    transition-duration: 250ms;
+    transition-timing-function: ease;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    &.flat{
+        &:hover, &:focus{
+            box-shadow: none;
+            transform: none;
+        }
+        &:focus-visible{
+            outline: 2px solid onbac;
+        }
+    }
+    &.danger{
+        --konponent-color: var(--danger-color);
+    }
+    &.success{
+        --konponent-color: var(--success-color);
+    }
+    &.success, &.danger{
+        &.border{
+            &:focus-visible:active{
+                --current-foreground-color: 255,255,255;
+            }
+        }
+    }
+    /* This is a special sub variant */
+    &.blank{
+        --konponent-color: var(--background-active-color);
+        color: rgb(var(--current-foreground-color));
+        &:focus, &:hover{
+            box-shadow: 0 5px 20px -4px rgba(0, 0, 0, .2);
+        }
+        &:active{
+            box-shadow: none;
+        }
+        &.text{
+            --current-foreground-color: var(--foreground-color);
+            &::before{
+                background: rgba(var(--current-foreground-color), 0.1);
+            }
+            &:focus-visible:active::before{
+                background: rgba(var(--current-foreground-color), 0.2);
+            }
+        }
+        &.border{
+            &:hover, &:focus{
+                --border-color: var(--foreground-color);
+                --current-foreground-color: var(--background-active-color);
+            }
+            &:focus-visible{
+                --current-foreground-color: var(--foreground-color);
+            }
+            &:focus-visible:active{
+                --current-foreground-color: var(--background-active-color);
+            }
+        }
+    }
+    &.block{
+        display: block;
+        width: 100%;
+    }
+    &.icon-only{
+        /* helps to make it 1:1 aspect ratio but doesn't force it (content must be 1:1) */
+        --padding: 8px;
+        &.xs{
+            --padding: 6px;
+        }
+        &.xl{
+            --padding: 12px;
+        }
+    }
+    &.text{
+        --current-foreground-color: var(--text-idle-foreground);
+        // ToDo: text variant has visibility problems on dark theme. Maybe crankig up the opacity of the bg could help
+        background: none;
+        color: rgb(var(--current-foreground-color));
+        &:hover, &:focus{
+            box-shadow: none;
+            transform: none;
+        }
+        &:hover, &:focus-visible{
+            &::before{
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        &:focus-visible:active::before{
+            // keyboard only :D
+            background: rgba(var(--konponent-color), 0.2);
+        }
+        &::before{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            border-radius: var(--radius);
+            background: rgba(var(--konponent-color), 0.1);
+            transform: scale(0);
+            transition-property: transform, opacity;
+            transition-duration: 150ms;
+            transition-timing-function: ease;
+            transform-origin: center;
+            z-index: 0;
+        }
+    }
+    &.border{
+        --current-foreground-color: var(--border-idle-foreground);
+        --border-width: 2px;
+        --border-color: var(--background-color);
+        background: transparent;
+        box-shadow: inset 0 0 0 var(--border-width) rgb(var(--border-color));
+        & > *{
+            color: rgb(var(--current-foreground-color));
+        }
+        &:hover, &:focus-visible{
+            --current-foreground-color: var(--border-hover-foreground);
+            // override the glow effect in the default button (inherit does not work with variables)
+            box-shadow: inset 0 0 0 var(--border-width) rgb(var(--border-color));
+            --border-color: var(--konponent-color);
+            transform: none;
+            background: rgb(var(--border-color));
+        }
+        // This button variant is the hardest to implement when it comes to keyboard navigation's visual feedback
+        &:focus-visible{
+            --current-foreground-color: var(--border-keyboard-foreground);
+            background: transparent;
+            --border-color: var(--konponent-color);
+        }
+        &:focus-visible:active{
+            // Keyboard only :D
+            background: rgb(var(--border-color));
+            --current-foreground-color: var(--border-hover-foreground);
+        }
+    }
+    &.xs{
+        // Override parent font-size with ease which also changes icon size
+        --font-size: .5rem;
+        --radius: 10px;
+        --padding: 6px 10px;
+    }
+    &.xl{
+        --font-size: 1.1rem;
+        --radius: 16px;
+        --padding: 12px 16px;
+    }
+    &:not(.text, .border, .flat, .blank)
+    {
+        &:hover, &:focus{
+            box-shadow: 0 10px 15px -8px rgba(var(--konponent-color), .8);
+            transform: translateY(-4px);
+        }
+    }
+    &:not(.text, .border, .flat, .blank):active{
+        box-shadow: none;
+        transform: translateY(0px);
+    }
+    &:disabled{
+        pointer-events: none;
+        box-shadow: none;
+        transform: translateY(0px);
+        opacity: .6;
+    }
+    & > .content{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        & > .trailing{
+            margin-left: auto;
+        }
+        & > .leading, & > .trailing{
+            display: flex;
+            align-items: center;
+        }
+    }
+}

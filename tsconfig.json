@@ -1,0 +1,11 @@
+{
+	"exclude": [
+		"**/node_modules",
+		"packages/**/tests/**",
+		"packages/**/dist/**"
+	],
+	"references": [
+		{ "path": "./packages/konponents-next" },
+		{ "path": "./packages/docs" }
+	]
+}
