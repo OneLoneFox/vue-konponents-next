@@ -1,1 +1,1 @@
-export { default as KonButton } from './KonButton';
+export { default as KonButton } from "./KonButton";
