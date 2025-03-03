@@ -8,7 +8,7 @@ import eslintPluginCypress from 'eslint-plugin-cypress/flat';
 import globals from 'globals';
 
 export default tseslint.config(
-	{ ignores: ['**/*.d.ts', '**/coverage', '**/dist'] },
+	{ ignores: ['**/*.d.ts', '**/coverage', '**/dist', '**/cache'] },
 	{
 		files: ['konponents-next/**/*.{cy.ts}'],
 		extends: [
