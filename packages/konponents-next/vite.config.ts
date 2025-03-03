@@ -21,6 +21,10 @@ export default defineConfig(({ mode }) => ({
 					nodeTransforms: mode === "production" ? [removeTestDataAttributes] : []
 				}
 			}
+		}),
+		dts({
+			copyDtsFiles: true,
+			exclude: ["**/__tests__/**", "cypress.d.ts", "vite-env.d.ts"],
 		})
 	],
 	build: {
