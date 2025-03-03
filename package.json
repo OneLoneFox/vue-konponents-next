@@ -8,6 +8,7 @@
 	],
 	"scripts": {
 		"docs:dev": "yarn workspace docs run dev",
+		"kon:watch": "yarn workspace konponents-next run watch",
 		"kon:build": "yarn workspace konponents-next run build",
 		"lint": "eslint . --fix"
 	},
