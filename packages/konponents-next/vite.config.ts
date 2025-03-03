@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
 		}),
 		dts({
 			copyDtsFiles: true,
-			exclude: ["**/__tests__/**", "cypress.d.ts", "vite-env.d.ts"],
+			exclude: ["**/__tests__/**", "cypress.d.ts", "src/vite-env.d.ts"],
 		})
 	],
 	build: {
