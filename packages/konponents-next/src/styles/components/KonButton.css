@@ -91,7 +91,7 @@
     }
     &.text{
         --current-foreground-color: var(--text-idle-foreground);
-        // ToDo: text variant has visibility problems on dark theme. Maybe crankig up the opacity of the bg could help
+        /* ToDo: text variant has visibility problems on dark theme. Maybe crankig up the opacity of the bg could help */
         background: none;
         color: rgb(var(--current-foreground-color));
         &:hover, &:focus{
@@ -105,7 +105,7 @@
             }
         }
         &:focus-visible:active::before{
-            // keyboard only :D
+            /* keyboard only :D */
             background: rgba(var(--konponent-color), 0.2);
         }
         &::before{
@@ -137,26 +137,26 @@
         }
         &:hover, &:focus-visible{
             --current-foreground-color: var(--border-hover-foreground);
-            // override the glow effect in the default button (inherit does not work with variables)
+            /* override the glow effect in the default button (inherit does not work with variables) */
             box-shadow: inset 0 0 0 var(--border-width) rgb(var(--border-color));
             --border-color: var(--konponent-color);
             transform: none;
             background: rgb(var(--border-color));
         }
-        // This button variant is the hardest to implement when it comes to keyboard navigation's visual feedback
+        /* This button variant is the hardest to implement when it comes to keyboard navigation's visual feedback */
         &:focus-visible{
             --current-foreground-color: var(--border-keyboard-foreground);
             background: transparent;
             --border-color: var(--konponent-color);
         }
         &:focus-visible:active{
-            // Keyboard only :D
+            /* Keyboard only :D */
             background: rgb(var(--border-color));
             --current-foreground-color: var(--border-hover-foreground);
         }
     }
     &.xs{
-        // Override parent font-size with ease which also changes icon size
+        /* Override parent font-size with ease which also changes icon size */
         --font-size: .5rem;
         --radius: 10px;
         --padding: 6px 10px;
