@@ -2,12 +2,24 @@ import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-	title: "Konponents Next Documentation",
+	title: "Konponents Next",
 	description: "Documentation site for the Konponents Next component library",
+	srcDir: "./src",
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
-			{ text: "Home", link: "/" },
+			{
+				text: "Guide",
+				items: [
+					{ text: "Getting started", "link": "/guide/getting-started" }
+				]
+			},
+			{
+				text: "Components",
+				items: [
+					{ text: "Button", link: "/components/button" }
+				]
+			},
 			{ text: "Examples", link: "/markdown-examples" }
 		],
 
