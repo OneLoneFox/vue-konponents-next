@@ -10,7 +10,7 @@ import globals from 'globals';
 export default tseslint.config(
 	{ ignores: ['**/*.d.ts', '**/coverage', '**/dist', '**/cache'] },
 	{
-		files: ['konponents-next/**/*.{cy.ts}'],
+		files: ['packages/konponents-next/**/*.cy.ts'],
 		extends: [
 			eslintPluginCypress.configs.recommended,
 		],
