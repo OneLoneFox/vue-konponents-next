@@ -32,11 +32,13 @@ export default tseslint.config(
 				singleline: { max: 3 }
 			}],
 			"vue/component-api-style": ["error", ["script-setup", "composition"]],
+			"vue/block-lang": ["error", {"script": {"lang": "ts"}}],
 			'@stylistic/js/indent': ["error", "tab"],
 			'@stylistic/js/quotes': ["warn", "double", { avoidEscape: true }],
 			'@stylistic/js/block-spacing': ["error"],
 			'@stylistic/js/object-curly-spacing': ["error", "always"],
 			'@stylistic/js/semi': ["error"],
+			"@stylistic/js/quote-props": ["error", "as-needed"]
 		},
 		languageOptions: {
 			ecmaVersion: 'latest',
