@@ -31,6 +31,7 @@ export default tseslint.config(
 			"vue/max-attributes-per-line": ["error", {
 				singleline: { max: 3 }
 			}],
+			"vue/component-api-style": ["error", ["script-setup", "composition"]],
 			'@stylistic/js/indent': ["error", "tab"],
 			'@stylistic/js/quotes': ["warn", "double", { avoidEscape: true }],
 			'@stylistic/js/block-spacing': ["error"],
