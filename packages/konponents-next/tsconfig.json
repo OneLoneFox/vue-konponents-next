@@ -12,7 +12,6 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "composite": true,
     "outDir": "dist",
     "paths": {
       "@/*": ["./src"],

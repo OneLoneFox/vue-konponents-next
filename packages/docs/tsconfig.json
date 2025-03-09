@@ -1,15 +1,7 @@
 {
-	"compilerOptions": {
-		"composite": true,
-	},
 	"vueCompilerOptions": {
 		"vitePressExtensions": [".md"]
 	},
-	"references": [
-		{
-			"path": "../konponents-next"
-		}
-	],
-	"include": [".vitepress/**/*.ts", ".vitepress/**/*.vue", "examples/**/*.vue", "**/*.md"],
+	"include": [".vitepress/**/*.ts", ".vitepress/**/*.vue", "examples/**/*.vue", "src/**/*.md"],
 	"exclude": [".vitepress/cache"]
 }
