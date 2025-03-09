@@ -1,0 +1,30 @@
+[class^="kon-"], [class*=" kon-"],
+[class^="kon-"] *, [class*=" kon-"] *{
+  &::before, &::after{
+    box-sizing: border-box;
+    outline: none;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* W/H */
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+  }
+  
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: rgb(var(--foreground-color));
+    border-radius: 3px;
+  }
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
