@@ -13,7 +13,12 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "composite": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["./src"],
+      "@components/*": ["./src/components"],
+      "@helpers/*": ["./src/helpers"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "cypress.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -1,3 +1,8 @@
+
+<script setup>
+import BasicButton from "../../examples/KonButton/BasicButton.vue";
+</script>
+
 # Button
 
 A button component :D
@@ -6,4 +11,15 @@ A button component :D
 
 Default button without any options.
 
-<DocExample></DocExample>
+<DocExample>
+<BasicButton />
+<template #code>
+
+<<< @/../examples/KonButton/BasicButton.vue
+
+</template>
+</DocExample>
+
+---
+
+asdasd
