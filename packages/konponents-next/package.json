@@ -3,7 +3,7 @@
   "private": false,
   "version": "0.0.1",
   "type": "module",
-  "main": "./dist/vue-konponents-next.umd.cjs",
+  "main": "./dist/vue-konponents-next.js",
   "module": "./dist/vue-konponents-next.js",
   "types": "./dist/src/main.d.ts",
   "license": "MIT",
@@ -12,10 +12,9 @@
     "dist/"
   ],
   "exports": {
-    ".": {
-      "import": "./dist/vue-konponents-next.js",
-      "require": "./dist/vue-konponents-next.umd.cjs"
-    },
+    ".": "./dist/vue-konponents-next.js",
+    "./components": "./dist/components.js",
+    "./helpers": "./dist/helpers.js",
     "./styles.css": "./dist/vue-konponents-next.css"
   },
   "scripts": {

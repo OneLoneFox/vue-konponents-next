@@ -4,6 +4,7 @@ import autoprefixer from "autoprefixer";
 import nesting from "postcss-nesting";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
+import { fileURLToPath, URL } from "node:url";
 
 function removeTestDataAttributes(node: TemplateChildNode) {
 	if (node.type !== 1 /* ELEMENT */) return;
@@ -28,18 +29,29 @@ export default defineConfig(({ mode }) => ({
 			exclude: ["**/__tests__/**", "cypress.d.ts", "src/vite-env.d.ts"],
 		})
 	],
+	resolve: {
+		alias: {
+			"@": fileURLToPath(new URL("./src", import.meta.url)),
+			"@components": fileURLToPath(new URL("./src/components", import.meta.url)),
+			"@helpers": fileURLToPath(new URL("./src/helpers", import.meta.url))
+		}
+	},
 	build: {
 		lib: {
-			entry: "src/main.ts",
+			entry: {
+				"vue-konponents-next": "src/main.ts",
+				components: "src/components/index.ts",
+				helpers: "src/helpers/index.ts"
+			},
 			name: "vue-konponents-next",
-			fileName: "vue-konponents-next",
 			cssFileName: "vue-konponents-next",
+			formats: ["es"]
 		},
 		rollupOptions: {
 			external: ["vue"],
 			output: {
 				globals: {
-					vue: "vue"
+					vue: "Vue"
 				}
 			}
 		}
