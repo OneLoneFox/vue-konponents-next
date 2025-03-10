@@ -18,7 +18,7 @@ export default tseslint.config(
 	{
 		files: ['**/*.{vue,ts,mts}'],
 		plugins: {
-			'@stylistic/js': stylistic,
+			'@stylistic': stylistic,
 		},
 		extends: [
 			eslint.configs.recommended,
@@ -32,13 +32,14 @@ export default tseslint.config(
 				singleline: { max: 3 }
 			}],
 			"vue/component-api-style": ["error", ["script-setup", "composition"]],
-			"vue/block-lang": ["error", {"script": {"lang": "ts"}}],
-			'@stylistic/js/indent': ["error", "tab"],
-			'@stylistic/js/quotes': ["warn", "double", { avoidEscape: true }],
-			'@stylistic/js/block-spacing': ["error"],
-			'@stylistic/js/object-curly-spacing': ["error", "always"],
-			'@stylistic/js/semi': ["error"],
-			"@stylistic/js/quote-props": ["error", "as-needed"]
+			"vue/block-lang": ["error", { "script": { "lang": "ts" } }],
+			'@stylistic/indent': ["error", "tab"],
+			'@stylistic/quotes': ["warn", "double", { avoidEscape: true }],
+			'@stylistic/block-spacing': ["error"],
+			'@stylistic/object-curly-spacing': ["error", "always"],
+			'@stylistic/semi': ["error"],
+			"@stylistic/quote-props": ["error", "as-needed"],
+			"@stylistic/member-delimiter-style": ["error"]
 		},
 		languageOptions: {
 			ecmaVersion: 'latest',
