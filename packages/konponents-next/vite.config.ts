@@ -13,7 +13,6 @@ function removeTestDataAttributes(node: TemplateChildNode) {
 		return prop.name !== "data-cy";
 	});
 }
-
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
 	plugins: [
@@ -37,6 +36,8 @@ export default defineConfig(({ mode }) => ({
 		}
 	},
 	build: {
+		emptyOutDir: (mode == "production" && !process.argv.includes("--watch")) ? true : false,
+		minify: false,
 		lib: {
 			entry: {
 				"vue-konponents-next": "src/main.ts",
@@ -50,6 +51,7 @@ export default defineConfig(({ mode }) => ({
 		rollupOptions: {
 			external: ["vue"],
 			output: {
+				preserveModules: true,
 				globals: {
 					vue: "Vue"
 				}
