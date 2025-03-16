@@ -35,17 +35,15 @@ function calculateRipple(e: MouseEvent, targetElement: Element) {
 	const halfHeight = targetElement.clientHeight / 2;
 	const HOffsetFromCenter = Math.abs(halfWidth - dx);
 	const VOffsetFromCenter = Math.abs(halfHeight - dy);
-	const largestTriangle = {
-		width: halfWidth + HOffsetFromCenter,
-		height: halfHeight + VOffsetFromCenter
-	};
-
+	
+	const largestTriangleWidth = halfWidth + HOffsetFromCenter;
+	const largestTriangleHeight = halfHeight + VOffsetFromCenter;
 
 	/**
 	 * The radius is just the hypotenuse of the triangle we obtained.
 	 * This will help us make a circle that extends to just the corner of the element
 	 */
-	const radius = Math.sqrt(Math.pow(largestTriangle.width, 2) + Math.pow(largestTriangle.height, 2));
+	const radius = Math.hypot(largestTriangleWidth, largestTriangleHeight);
 
 	return { dx, dy, radius };
 }
