@@ -32,7 +32,7 @@ import { Code2, Keyboard, View } from "lucide-vue-next";
 import { ref } from "vue";
 const resultSnippet = ref<null|string>(null);
 const expandedResults = ref(false);
-const expandedCode = ref(true);
+const expandedCode = ref(false);
 
 function toggleResults(){
 	expandedResults.value = !expandedResults.value;
@@ -52,11 +52,19 @@ function toggleCode(){
 	color: var(--vp-c-text-1);
 	padding: 20px 16px;
 	border-radius: 20px;
+	.content{
+		display: flex;
+		align-content: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 16px;
+	}
 	.controls{
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		bottom: 0;
+		margin-top: 20px;
 		.control{
 			position: relative;
 			display: flex;

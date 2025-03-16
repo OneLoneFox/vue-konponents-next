@@ -1,3 +1,9 @@
 @import "variables.css";
 
 @import "components/KonButton.css";
+
+@import "components/KonProgressCircular.css";
+
+@import "components/KonProgressLinear.css";
+
+@import "ripple.css";

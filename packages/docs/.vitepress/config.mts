@@ -17,7 +17,9 @@ export default defineConfig({
 			{
 				text: "Components",
 				items: [
-					{ text: "Button", link: "/components/button" }
+					{ text: "Button", link: "/components/button" },
+					{ text: "Circular Progress", link: "/components/circular-progress" },
+					{ text: "Linear Progress", link: "/components/linear-progress" },
 				]
 			},
 			{ text: "Examples", link: "/markdown-examples" }

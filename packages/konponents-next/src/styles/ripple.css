@@ -1,0 +1,22 @@
+.kon-ripple {
+	--duration: 0ms;
+	--dx: 0px;
+	--dy: 0px;
+	--dw: 0px;
+	--dh: 0px;
+	--opacity: 0;
+	position: absolute;
+	left: var(--dx);
+	top: var(--dy);
+	width: var(--dw);
+	height: var(--dh);
+	border-radius: 50%;
+	opacity: var(--opacity);
+	background: var(--ripple-color, var(--kon-on-surface), #FFF);
+	transition-property: background, width, height, opacity;
+	transform: translate(-50%, -50%);
+	transition-duration: var(--duration);
+	transition-timing-function: ease;
+	z-index: 0;
+	pointer-events: none;
+}

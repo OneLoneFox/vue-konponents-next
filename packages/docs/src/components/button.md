@@ -5,11 +5,11 @@ import BasicButton from "../../examples/KonButton/BasicButton.vue";
 
 # Button
 
-A button component :D
+A button component that loosely follows material design 3.
 
 ## Default
 
-Default button without any options.
+The default button variants with their respective disabled state.
 
 <DocExample>
 <BasicButton />
@@ -19,7 +19,3 @@ Default button without any options.
 
 </template>
 </DocExample>
-
----
-
-asdasd

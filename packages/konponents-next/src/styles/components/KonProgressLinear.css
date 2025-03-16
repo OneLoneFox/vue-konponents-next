@@ -1,0 +1,161 @@
+.kon-progress-linear {
+	--stroke-width: 4;
+	--value: 0;
+	--gap: 4px;
+	--value-percent: calc(var(--value) * 1%);
+
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: calc(var(--stroke-width) * 1px);
+	overflow: hidden;
+	border-radius: calc(var(--stroke-width) * 1px);
+	color: var(--kon-primary);
+	contain: layout;
+
+	& .kon-progress-track {
+		background: var(--kon-secondary-container);
+		overflow: hidden;
+	}
+
+	& .kon-progress-track,
+	.kon-progress-stroke {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: calc(var(--stroke-width) * 1px);
+		transition-property: width, height, left;
+		transition-duration: 250ms;
+		transition-timing-function: var(--kon-easing, ease-in-out);
+		border-radius: calc(var(--stroke-width) * 1px);
+
+		&:dir(rtl) {
+			right: 0;
+		}
+	}
+
+	& .kon-progress-stroke {
+		background: currentColor;
+		z-index: 2;
+	}
+
+	&.kon-indeterminate {
+		& .kon-progress-track.kon-before{
+			animation: kon-progress-track-before 2s infinite;
+		}
+		& .kon-progress-track.kon-after{
+			animation: kon-progress-track-after 2s infinite;
+		}
+		& .kon-progress-stroke {
+			width: 100%;
+			background: transparent;
+			& .kon-indeterminate-stroke-1,
+			.kon-indeterminate-stroke-2 {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				background: currentColor;
+				border-radius: calc(var(--stroke-width) * 1px);
+			}
+			& .kon-indeterminate-stroke-1{
+				animation: kon-progress-linear-stroke-1 2s infinite cubic-bezier(0.8, 0, 1, 1);
+			}
+			& .kon-indeterminate-stroke-2{
+				animation: kon-progress-linear-stroke-2 2s infinite var(--kon-easing-in);
+			}
+		}
+	}
+
+	&:not(.kon-indeterminate) {
+		& .kon-progress-stroke {
+			width: var(--value-percent);
+		}
+
+		& .kon-progress-track.kon-after {
+			left: calc(var(--value-percent) + var(--gap));
+			width: calc(100% - var(--value-percent) - var(--gap));
+
+			&::before {
+				content: '';
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: calc(var(--stroke-width) * 1px);
+				height: calc(var(--stroke-width) * 1px);
+				background: currentColor;
+				border-radius: calc(var(--stroke-width) * 1px);
+			}
+
+			&:dir(rtl) {
+				right: calc(var(--value-percent) + var(--gap));
+
+				&::before {
+					left: 0;
+				}
+			}
+		}
+	}
+}
+
+@keyframes kon-progress-linear-stroke-1 {
+	0% {
+		left: 0%;
+		width: 0%;
+	}
+
+	50%, 100% {
+		left: 100%;
+		width: 50%;
+	}
+}
+
+@keyframes kon-progress-linear-stroke-2 {
+	0%, 50% {
+		left: 0%;
+		width: 0%;
+	}
+
+	100% {
+		left: 100%;
+		width: 100%;
+	}
+}
+
+@keyframes kon-progress-track-before {
+	0% {
+		width: calc(0% - 4px);
+		animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+	}
+	50% {
+		width: calc(100% - 4px);
+	}
+	50.01% {
+		width: calc(0% - 4px);
+		/* Copy --kon-easing-in bc timing function vars don't work on keyframes */
+		animation-timing-function: cubic-bezier(0.3, 0, 1, 1);
+	}
+	100% {
+		width: calc(100% - 4px);
+	}
+}
+
+@keyframes kon-progress-track-after {
+	0% {
+		left: calc(0% + 4px);
+		animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+	}
+	50% {
+		left: calc(150% + 4px);
+	}
+	50.01% {
+		left: calc(0% + 4px);
+		/* Copy --kon-easing-in bc timing function vars don't work on keyframes */
+		animation-timing-function: cubic-bezier(0.3, 0, 1, 1);
+	}
+	100% {
+		left: calc(200% + 4px);
+	}
+}

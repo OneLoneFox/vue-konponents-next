@@ -12,5 +12,7 @@ export * from "./components";
 declare module "vue" {
 	interface GlobalComponents {
 		KonButton: typeof components.KonButton;
+		KonProgressCircular: typeof components.KonProgressCircular;
+		KonProgressLinear: typeof components.KonProgressLinear;
 	}
 }

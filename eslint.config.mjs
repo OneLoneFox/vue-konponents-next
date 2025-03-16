@@ -31,6 +31,7 @@ export default tseslint.config(
 			"vue/max-attributes-per-line": ["error", {
 				singleline: { max: 3 }
 			}],
+			"vue/require-default-prop": "off",
 			"vue/component-api-style": ["error", ["script-setup", "composition"]],
 			"vue/block-lang": ["error", { "script": { "lang": "ts" } }],
 			'@stylistic/indent': ["error", "tab"],

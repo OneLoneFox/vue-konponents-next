@@ -1,0 +1,106 @@
+.kon-progress-circular {
+	--size: 40;
+	--stroke-width: 4;
+	--value: 0;
+	--radius: 0;
+	--cap-radius: calc(var(--stroke-width) / 2);
+
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--kon-primary);
+
+	&>svg {
+		height: calc(var(--size, 40) * 1px);
+		width: calc(var(--size, 40) * 1px);
+		transform: rotate(-90deg);
+	}
+
+	& .kon-progress-track,
+	.kon-progress-stroke {
+		stroke-linecap: round;
+	}
+
+	& .kon-progress-track {
+		color: var(--kon-secondary-container);
+		stroke: currentColor;
+	}
+
+	& .kon-progress-track,
+	.kon-progress-stroke {
+		stroke-width: var(--stroke-width, 4);
+		transition-property: stroke-width, stroke-dasharray, stroke-dashoffset;
+		transition-duration: 250ms;
+		transition-timing-function: var(--kon-easing, ease-in-out);
+	}
+
+	& .kon-progress-stroke {
+		stroke: currentColor;
+		z-index: 2;
+	}
+
+	&.kon-indeterminate {
+		& .kon-progress-track {
+			color: transparent;
+			transition: none;
+			stroke-dasharray: none;
+		}
+
+		& .kon-progress-stroke {
+			animation: kon-progress-circular-stroke 2s infinite var(--kon-easing, ease-in-out);
+		}
+
+		&>svg {
+			animation: kon-progress-circular-spin 2s infinite linear;
+		}
+	}
+
+	&:not(.kon-indeterminate) {
+		& .kon-progress-track {
+			/**
+			 * HAHA magic numbers go brrrrr
+			 * --cap-radius: "stroke-linecap: round" extends the cap by half a circle so
+			 * we need to substract that from the offset so the indicator and track don't overlap.
+			 *
+			 * 3, 6, 0.5: These are magic numbers I got out of thin air and are the ones
+			 * that work best across all possible configurations (stroke width, size, value).
+			 * They define the gap between the indicator and the track.
+			 * 
+			 */
+			stroke-dasharray: calc(100 - var(--value) - (var(--cap-radius) * 6) + 0.5) 100;
+			stroke-dashoffset: calc((var(--value) * -1) - (var(--cap-radius) * 3));
+		}
+
+		& .kon-progress-stroke {
+			stroke-dasharray: var(--value, 0) 100;
+		}
+	}
+}
+
+@keyframes kon-progress-circular-spin {
+	0% {
+		transform: rotate(-90deg);
+	}
+
+	100% {
+		transform: rotate(270deg);
+	}
+}
+
+@keyframes kon-progress-circular-stroke {
+	0% {
+		stroke-dashoffset: 0;
+		stroke-dasharray: 0 100;
+	}
+
+	50% {
+		stroke-dashoffset: -25;
+		stroke-dasharray: 90 100;
+	}
+
+	100% {
+		stroke-dashoffset: -100;
+		stroke-dasharray: 90 100;
+	}
+}

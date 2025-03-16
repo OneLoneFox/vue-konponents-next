@@ -1,0 +1,3 @@
+<template>
+	<KonProgressLinear indeterminate />
+</template>
