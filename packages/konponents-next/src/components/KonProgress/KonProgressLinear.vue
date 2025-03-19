@@ -1,15 +1,16 @@
 <template>
 	<div
 		class="kon-progress kon-progress-linear"
-		:class="{'kon-indeterminate': props.indeterminate}"
+		:class="{'kon-indeterminate': indeterminate}"
 		:style="variables"
+		:aria-valuenow="indeterminate ? undefined : clampedValue.toFixed(2)"
 	>
 		<div
 			class="kon-progress-track kon-before"
-			v-if="props.indeterminate"
+			v-if="indeterminate"
 		/>
 		<div class="kon-progress-stroke">
-			<template v-if="props.indeterminate">
+			<template v-if="indeterminate">
 				<div class="kon-indeterminate-stroke-1" />
 				<div class="kon-indeterminate-stroke-2" />
 			</template>

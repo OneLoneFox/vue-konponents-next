@@ -11,7 +11,7 @@ A Linear progress component that tries to imitate the material design 3 spec.
 
 Set a value between 0-100.
 
-<DocExample>
+<DocExample :test-focus="false">
 <WithValue />
 <template #code>
 
@@ -24,7 +24,7 @@ Set a value between 0-100.
 
 Set indeterminate to true to use an indeterminate spinner.
 
-<DocExample>
+<DocExample :test-focus="false">
 <IndeterminateProgress />
 <template #code>
 

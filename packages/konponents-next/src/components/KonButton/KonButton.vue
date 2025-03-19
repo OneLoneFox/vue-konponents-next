@@ -2,16 +2,16 @@
 	<button 
 		class="kon-button"
 		:class="[
-			props.type ? `kon-${props.type}` : '',
+			type ? `kon-${type}` : '',
 			{
-				'kon-icon': !!props.icon,
-				'kon-danger': !!props.danger,
-				'kon-loading': !!props.loading,
-				'kon-loading-disable': !!props.loading && !!props.disableOnLoading
+				'kon-icon': icon,
+				'kon-danger': danger,
+				'kon-loading': loading,
+				'kon-loading-disable': loading && disableOnLoading
 			}
 		]"
 		v-ripple
-		:disabled="!!props.disabled || (!!props.loading && !!props.disableOnLoading)"
+		:disabled="disabled || (loading && disableOnLoading)"
 	>
 		<span class="kon-content">
 			<span v-if="$slots.leading" class="kon-leading">
@@ -25,18 +25,17 @@
 				<slot name="trailing" />
 			</span>
 		</span>
-		<KonProgressTransition :stroke-width="4" v-slot="{ strokeWidth }">
-			<span class="kon-button-loader" v-if="!!props.loading">
+		<KonProgressTransition>
+			<span class="kon-button-loader" v-if="!!loading">
 				<template v-if="$slots.loader">
 					<!-- Slot used for custom progress bars -->
 					<slot name="loader" />
 				</template>
 				<template v-else>
 					<KonProgressCircular
-						:stroke-width="strokeWidth"
 						:size="24"
-						:indeterminate="props.loadingProgress == undefined"
-						:value="props.loadingProgress"
+						:indeterminate="loadingProgress == undefined"
+						:value="loadingProgress"
 					/>
 				</template>
 			</span>
@@ -48,6 +47,7 @@
 import { rippleDirective as vRipple } from "@/directives/kon-ripple";
 import KonProgressCircular from "../KonProgress";
 import { KonProgressTransition } from "../KonProgress";
+
 interface Props {
 	/**
 	 * The button variant.
@@ -66,7 +66,9 @@ interface Props {
 	 */
 	disableOnLoading?: boolean;
 	/**
-	 * The loading progress value used by the default loader, leave as undefined to use an indeterminate loader.
+	 * The current value of the default loader, between 0-100.
+	 * 
+	 * Leave as undefined to use an indeterminate loader.
 	 */
 	loadingProgress?: number;
 	/**
@@ -78,7 +80,7 @@ interface Props {
 	 */
 	danger?: boolean;
 };
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
 	disableOnLoading: true,
 });
 </script>

@@ -1,0 +1,111 @@
+.kon-select,
+.kon-select-multiple {
+	--current-label-color: rgba(var(--foreground-color), 1);
+	--current-label-elevation-offset: 0;
+	min-width: 200px;
+	max-width: 200px;
+
+	&.kon-full-width {
+		width: 100%;
+		max-width: none;
+	}
+
+	&.kon-has-label {
+		margin-top: 22px;
+	}
+
+	&.kon-error {
+		&>.kon-select-label {
+			color: rgb(var(--danger-color));
+			animation: shake-label 500ms ease;
+		}
+
+		&>.kon-select-message {
+			color: rgb(var(--danger-color));
+			animation: shake-transform 500ms ease;
+		}
+	}
+
+	&>.kon-select-label {
+		--current-label-elevation-offset: calc(-100% - 8px);
+		position: absolute;
+		display: flex;
+		align-items: center;
+		left: 0;
+		font-size: .8rem;
+		transform: translate(8px, var(--current-label-elevation-offset));
+		color: var(--current-label-color);
+
+		&.is-placeholder {
+			--current-label-elevation-offset: 0;
+			transition-property: transform, color;
+			transition-timing-function: ease;
+			transition-duration: 250ms;
+			--current-label-color: rgba(var(--foreground-color), .4);
+			/* passthrough events while on placeholder mode */
+			pointer-events: none;
+			transform: translate(10px, var(--current-label-elevation-offset));
+
+			&.elevated {
+				pointer-events: auto;
+				--current-label-elevation-offset: calc(-100% - 8px);
+				transform: translate(8px, var(--current-label-elevation-offset));
+				--current-label-color: rgba(var(--foreground-color), 1);
+			}
+		}
+	}
+
+	&>.chevron {
+		display: flex;
+		align-items: center;
+		position: absolute;
+		top: 0;
+		right: 8px;
+		height: 100%;
+		color: rgba(var(--foreground-color), 1);
+		transform: rotate(0deg);
+		transition-property: transform;
+		transition-duration: 250ms;
+		transition-timing-function: ease;
+	}
+
+	&.open {
+		&>.chevron {
+			transform: rotate(180deg);
+		}
+
+		&>.kon-select-label.is-placeholder {
+			pointer-events: auto;
+			--current-label-elevation-offset: calc(-100% - 8px);
+			transform: translate(8px, var(--current-label-elevation-offset));
+			--current-label-color: rgba(var(--foreground-color), 1);
+		}
+	}
+
+	&>.kon-select-message {
+		position: absolute;
+		padding: 0 8px;
+		left: 0;
+		top: calc(100% + 2px);
+		font-size: .7rem;
+		color: var(--current-label-color);
+	}
+
+	& .kon-show-options-enter-active,
+	.kon-show-options-leave-active {
+		transition-property: max-height, transform, opacity, background-color;
+		transition-timing-function: ease;
+		transition-duration: 250ms;
+		pointer-events: none;
+	}
+
+	& .kon-show-options-enter-from,
+	.kon-show-options-leave-to {
+		max-height: 0px;
+		transform: translateY(-12px);
+
+		&>* {
+			opacity: 0;
+		}
+	}
+}

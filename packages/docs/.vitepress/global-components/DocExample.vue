@@ -1,11 +1,17 @@
 <template>
 	<div class="doc-example">
+		<div
+			v-if="props.testFocus"
+			ref="focus-el"
+			class="focus-target"
+			tabindex="-1"
+		/>
 		<div class="content">
 			<slot />
 		</div>
 		<div class="code">
 			<div class="controls">
-				<button class="control">
+				<button v-if="props.testFocus" class="control" @click="setFocus">
 					<Keyboard :size="16" />
 				</button>
 				<button class="control" :class="{expanded: expandedResults}" @click="toggleResults">
@@ -29,10 +35,23 @@
 
 <script setup lang="ts">
 import { Code2, Keyboard, View } from "lucide-vue-next";
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 const resultSnippet = ref<null|string>(null);
+const focusEl = useTemplateRef("focus-el");
 const expandedResults = ref(false);
 const expandedCode = ref(false);
+
+const props = withDefaults(defineProps<{
+	testFocus?: boolean;
+}>(), {
+	testFocus: true
+});
+
+function setFocus(){
+	console.log(focusEl.value);
+		
+	focusEl.value.focus();
+}
 
 function toggleResults(){
 	expandedResults.value = !expandedResults.value;
@@ -52,6 +71,23 @@ function toggleCode(){
 	color: var(--vp-c-text-1);
 	padding: 20px 16px;
 	border-radius: 20px;
+	.focus-target{
+		position: absolute;
+		top: 20px;
+		left: 16px;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		background: rgba(var(--kon-on-surface-rgb), 0.1);
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 300ms ease;
+		z-index: 2;
+		&:focus{
+			opacity: 1;
+			animation: focus-pulse 2s infinite ease;
+		}
+	}
 	.content{
 		display: flex;
 		align-content: center;
@@ -110,6 +146,14 @@ function toggleCode(){
 				}
 			}
 		}
+	}
+}
+@keyframes focus-pulse {
+	0%, 100%{
+		transform: scale(0.8);
+	}
+	50%{
+		transform: scale(1);
 	}
 }
 </style>

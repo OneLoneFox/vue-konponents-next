@@ -4,6 +4,7 @@
 	--value: 0;
 	--radius: 0;
 	--cap-radius: calc(var(--stroke-width) / 2);
+	--stroke-scale: 1;
 
 	position: relative;
 	display: inline-flex;
@@ -29,7 +30,7 @@
 
 	& .kon-progress-track,
 	.kon-progress-stroke {
-		stroke-width: var(--stroke-width, 4);
+		stroke-width: calc(var(--stroke-width, 4) * var(--stroke-scale, 1));
 		transition-property: stroke-width, stroke-dasharray, stroke-dashoffset;
 		transition-duration: 250ms;
 		transition-timing-function: var(--kon-easing, ease-in-out);

@@ -1,0 +1,84 @@
+.kon-select {
+	--font-size: 0.8rem;
+	--component-background: var(--kon-surface-container);
+	--component-foreground: var(--kon-on-surface);
+	position: relative;
+	padding: 8px 12px;
+	padding-right: 30px;
+	background: var(--component-background);
+	border-radius: 12px;
+	user-select: none;
+	cursor: pointer;
+	transition-property: border-radius, transform, background, filter, padding;
+	transition-timing-function: ease;
+	transition-duration: 250ms;
+	font-size: var(--font-size);
+
+	&:hover,
+	&:focus,
+	&:focus-within {
+		/* {13, ..., 21} */
+		--component-background: var(--kon-surface);
+		/* Use filter instead of box shadow since we are applying a shadow to the shole thing and we don't want overlaps */
+		filter: drop-shadow(0 0 12px rgba(var(--kon-primary-rgb), 0.1));
+	}
+
+	&.kon-open {
+		transform: translateY(-4px);
+	}
+
+	&.kon-open:not(.detached) {
+		border-radius: 12px 12px 0px 0px;
+	}
+
+	&.kon-disabled {
+		pointer-events: none;
+		opacity: .6;
+	}
+
+	& .kon-placeholder,
+	& .kon-value {
+		/* Allow it to have a z-index */
+		position: relative;
+		display: flex;
+		align-items: center;
+		color: var(--component-foreground);
+		opacity: 1;
+		transition: opacity 250ms ease;
+		/* Text must stay on top of the option menu to prevent getting occluded during the reveal transition */
+		z-index: 2;
+
+		&.kon-hidden {
+			opacity: 0;
+		}
+	}
+
+	& .kon-placeholder{
+		opacity: 0.4;
+	}
+
+	.kon-filter-input {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: none;
+		border: none;
+		z-index: 3;
+		padding: 8px 12px;
+		color: rgb(var(--component-foreground));
+	}
+
+	&.kon-select-label-enter-active,
+	&.kon-select-label-leave-active {
+		transition-property: opacity;
+		transition-timing-function: ease;
+		transition-duration: 150ms;
+	}
+
+	&.kon-select-label-enter,
+	&.kon-select-label-leave-to {
+		opacity: 0;
+	}
+}

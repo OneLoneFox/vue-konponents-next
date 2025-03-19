@@ -16,9 +16,9 @@ const isDark = useData().isDark;
 
 watch(isDark, () => {
 	if(isDark.value){
-		document.body.setAttribute("kon-theme", "dark");
+		document.documentElement.setAttribute("kon-theme", "dark");
 	}else{
-		document.body.removeAttribute("kon-theme");
+		document.documentElement.removeAttribute("kon-theme");
 	}
 }, { immediate: true });
 </script>

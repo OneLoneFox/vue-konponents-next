@@ -3,6 +3,7 @@
 	--value: 0;
 	--gap: 4px;
 	--value-percent: calc(var(--value) * 1%);
+	--stroke-scale: 1;
 
 	position: relative;
 	display: inline-flex;
@@ -26,10 +27,11 @@
 		left: 0;
 		width: 100%;
 		height: calc(var(--stroke-width) * 1px);
-		transition-property: width, height, left;
+		transition-property: width, left, transform;
 		transition-duration: 250ms;
 		transition-timing-function: var(--kon-easing, ease-in-out);
 		border-radius: calc(var(--stroke-width) * 1px);
+		transform: scaleY(var(--stroke-scale, 1));
 
 		&:dir(rtl) {
 			right: 0;
@@ -131,6 +133,8 @@
 	}
 	50% {
 		width: calc(100% - 4px);
+		/* Remove the flickering caused by the abrupt change in values trying to be eased between 50% and 50.01% */
+		animation-timing-function: step-start;
 	}
 	50.01% {
 		width: calc(0% - 4px);
@@ -149,6 +153,8 @@
 	}
 	50% {
 		left: calc(150% + 4px);
+		/* Remove the flickering caused by the abrupt change in values trying to be eased between 50% and 50.01% */
+		animation-timing-function: step-start;
 	}
 	50.01% {
 		left: calc(0% + 4px);

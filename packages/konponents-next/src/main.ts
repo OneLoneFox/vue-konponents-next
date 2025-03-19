@@ -14,5 +14,7 @@ declare module "vue" {
 		KonButton: typeof components.KonButton;
 		KonProgressCircular: typeof components.KonProgressCircular;
 		KonProgressLinear: typeof components.KonProgressLinear;
+		KonSelect: typeof components.KonSelect;
+		KonOption: typeof components.KonOption;
 	}
 }

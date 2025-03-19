@@ -1,5 +1,12 @@
 import { defineConfig } from "vitepress";
 
+const navComponents = [
+	{ text: "Button", link: "/components/button" },
+	{ text: "Select", link: "/components/select" },
+	{ text: "Circular Progress", link: "/components/circular-progress" },
+	{ text: "Linear Progress", link: "/components/linear-progress" },
+];
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
 	title: "Konponents Next",
@@ -7,6 +14,7 @@ export default defineConfig({
 	srcDir: "./src",
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
+		outline: "deep",
 		nav: [
 			{
 				text: "Guide",
@@ -16,22 +24,14 @@ export default defineConfig({
 			},
 			{
 				text: "Components",
-				items: [
-					{ text: "Button", link: "/components/button" },
-					{ text: "Circular Progress", link: "/components/circular-progress" },
-					{ text: "Linear Progress", link: "/components/linear-progress" },
-				]
+				items: navComponents
 			},
-			{ text: "Examples", link: "/markdown-examples" }
 		],
 
 		sidebar: [
 			{
-				text: "Examples",
-				items: [
-					{ text: "Markdown Examples", link: "/markdown-examples" },
-					{ text: "Runtime API Examples", link: "/api-examples" }
-				]
+				text: "Components",
+				items: navComponents
 			}
 		],
 

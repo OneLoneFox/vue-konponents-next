@@ -40,6 +40,18 @@
             box-shadow: none;
             transform: none;
         }
+        /* Special override */
+        & .kon-progress-circular:not(.kon-indeterminate){
+            & .kon-progress-track{
+                color: rgba(var(--kon-primary-rgb), 0.2);
+            }
+        }
+        /* Special override */
+        & .kon-progress-linear{
+            & .kon-progress-track{
+                background: rgba(var(--kon-primary-rgb), 0.2);
+            }
+        }
     }
     &.kon-block{
         display: block;
@@ -130,8 +142,10 @@
     }
     &:disabled{
         pointer-events: none;
-        box-shadow: none;
         transform: translateY(0px);
+        &:not(.kon-border){
+            box-shadow: none;
+        }
         &:not(.kon-loading-disable){
             opacity: .6;
         }

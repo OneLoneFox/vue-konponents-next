@@ -1,8 +1,10 @@
 <template>
 	<div
 		class="kon-progress kon-progress-circular"
-		:class="{'kon-indeterminate': props.indeterminate}"
+		:class="{'kon-indeterminate': indeterminate}"
 		:style="variables"
+		role="progressbar"
+		:aria-valuenow="indeterminate ? undefined : clampedValue.toFixed(2)"
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -66,12 +68,16 @@ const radius = computed(() => {
 	return 20 - (props.strokeWidth / 2);
 });
 
+const clampedValue = computed(() => {
+	return Math.min(Math.max(props.value, 0), 100);
+});
+
 const variables = computed(() => {
 	return {
 		"--radius": radius.value,
 		"--size": props.size,
 		"--stroke-width": props.strokeWidth,
-		"--value": Math.min(Math.max(props.value, 0), 100),
+		"--value": clampedValue.value,
 	};
 });
 </script>

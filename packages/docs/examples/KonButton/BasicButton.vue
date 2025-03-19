@@ -1,20 +1,16 @@
 <template>
 	<ExampleColumn>
 		<ExampleRow>
-			<KonButton @click="start" :loading="isLoading" :loading-progress="progress">
+			<KonButton>
 				Filled (default)
 			</KonButton>
-			<KonButton
-				@click="indetLoading = !indetLoading"
-				:loading="indetLoading"
-				type="tonal"
-			>
+			<KonButton type="tonal">
 				Tonal button
 			</KonButton>
-			<KonButton :loading="indetLoading" type="text">
+			<KonButton type="text">
 				Text button
 			</KonButton>
-			<KonButton :loading="indetLoading" type="border">
+			<KonButton type="border">
 				Border button
 			</KonButton>
 		</ExampleRow>
@@ -34,13 +30,3 @@
 		</ExampleRow>
 	</ExampleColumn>
 </template>
-
-<script setup lang="ts">
-
-import { ref } from "vue";
-import { useFakeLoading } from "../utils/composables";
-
-const indetLoading = ref(false);
-const { isLoading, progress, start } = useFakeLoading();
-
-</script>
