@@ -73,7 +73,7 @@
 					<template v-if="filteredItems.length">
 						<KonOption
 							v-for="item in filteredItems"
-							:key="getItemValue(item) ?? undefined"
+							:key="String(getItemValue(item)) ?? undefined"
 							:value="getItemValue(item)"
 							:selected="getItemValue(modelValue) === getItemValue(item)"
 							:disabled="disabledItem(item)"
@@ -116,12 +116,11 @@
 	</div>
 </template>
 
-<script setup lang="ts" generic="T extends {[key: string]: any}">
+<script setup lang="ts" generic="T, K extends keyof T">
 import { computed, ref, useTemplateRef } from "vue";
 import KonOption from "./KonOption.vue";
 
-type Item = string|number|T;
-type FilterFn = (items: Item[], searchTerm: string) => Item[];
+type FilterFn = (items: T[], searchTerm: string) => T[];
 
 /**
  * This has to be a type instead of an interface otherwise
@@ -133,7 +132,7 @@ type Props = {
 	/**
 	 * The v-model value.
 	 */
-	modelValue: Item | null;
+	modelValue: T | null;
 	/**
 	 * Disables all interactions with the component.
 	 */
@@ -181,19 +180,19 @@ type Props = {
 	 * If an array of objects is passed the valueAttribute and textAttribute
 	 * properties MUST be defined as valid object keys.
 	 */
-	items: Item[];
+	items: T[];
 	/**
 	 * Defines the object property to use as the label
 	 * to show in the dropdown and the select item.
 	 */
-	textAttribute?: keyof T;
+	textAttribute?: K;
 	/**
 	 * Defines the object property to use as the value
 	 * for the component to determine which item was selected.
 	 * 
 	 * It MUST be an unique value.
 	 */
-	valueAttribute?: keyof T;
+	valueAttribute?: K;
 	/**
 	 * Set to true to make the component take the full width of its container.
 	 */
@@ -206,7 +205,7 @@ type Props = {
 	 * 
 	 * @param item - The current element being evaluated, one of `items`.
 	 */
-	disabledItem?: (item: Item) => boolean;
+	disabledItem?: (item: T) => boolean;
 	/**
 	 * Enables the usage of a filter function to narrow down the
 	 * visible items based on a `search` term or an internal search
@@ -235,7 +234,7 @@ type Props = {
 	 * 
 	 * If not provided `textAttribute` will be used.
 	 */
-	filterAttribute?: keyof T;
+	filterAttribute?: K;
 	/**
 	 * 
 	 * @param items - The `items` being filtered.
@@ -253,7 +252,7 @@ const props = withDefaults(defineProps<Props>(), {
 	disableOnLoading: true,
 });
 const emit = defineEmits<{
-	(e: "update:modelValue", value: Item): void;
+	(e: "update:modelValue", value: T): void;
 	(e: "click", ev: MouseEvent): void;
 	(e: "blur", ev: FocusEvent): void;
 	(e: "keydown", ev: KeyboardEvent): void;
@@ -269,7 +268,7 @@ const isElevated = computed(() => {
 	return props.modelValue !== null && props.modelValue !== undefined;
 });
 
-function defaultSearchFn(items: Item[], searchTerm: string){
+function defaultSearchFn(items: T[], searchTerm: string){
 	return items.filter((item) => {
 		const searchTextLower = searchTerm.toLowerCase();
 		if(typeof item == "string" || typeof item == "number"){
@@ -281,12 +280,11 @@ function defaultSearchFn(items: Item[], searchTerm: string){
 			 * do nothing.
 			 */
 		if(!props.filterAttribute && !props.textAttribute){
-			return item;
+			return true;
 		}
-			
 		const attr = props.filterAttribute ? props.filterAttribute : props.textAttribute;
 		/* At this point we know one of them is not undefined so it's safe to cast. */
-		const itemText: unknown = item[attr as keyof T];
+		const itemText: unknown = item[attr as K];
 		if(typeof itemText == "string" || typeof itemText == "number"){
 			/**
 				 * Try to search if the attr given is string or number
@@ -295,7 +293,7 @@ function defaultSearchFn(items: Item[], searchTerm: string){
 			const itemTextLower = itemText.toString().toLowerCase();
 			return itemTextLower.includes(searchTextLower);
 		}
-		return item;
+		return true;
 	});
 }
 
@@ -312,14 +310,14 @@ const shouldDisable = computed(() => {
 	return props.disabled || (props.loading && props.disableOnLoading);
 });
 
-function getItemValue(item: Item | null){
+function getItemValue(item: T | null): T | T[K] | null{
 	if(item === null || item === "" || !props.valueAttribute){
 		return null;
 	}
 	return typeof item === "object" ? item[props.valueAttribute] : item;
 }
 
-function getItemText(item: Item | null){
+function getItemText(item: T | null): T | T[K] | null{
 	if(item === null || item === "" || !props.textAttribute){
 		return null;
 	}
@@ -371,7 +369,7 @@ function handleKeydown(e: KeyboardEvent){
 	}
 }
 
-function selectItem(e: MouseEvent, item: Item){
+function selectItem(e: MouseEvent, item: T){
 	const val = getItemValue(item);
 	const oldVal = getItemValue(props.modelValue);
 	if(val !== oldVal){
