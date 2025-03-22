@@ -12,7 +12,7 @@
 	height: var(--dh);
 	border-radius: 50%;
 	opacity: var(--opacity);
-	background: var(--ripple-color, var(--kon-on-surface), #FFF);
+	background: var(--ripple-color, var(--kon-on-surface, #FFF));
 	transition-property: background, width, height, opacity;
 	transform: translate(-50%, -50%);
 	transition-duration: var(--duration);
