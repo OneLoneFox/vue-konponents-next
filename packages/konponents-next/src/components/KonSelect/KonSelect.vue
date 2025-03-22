@@ -203,7 +203,7 @@
 	setup lang="ts"
 	generic="T, K extends keyof T, M extends boolean | undefined"
 >
-import { computed, nextTick, provide, ref, shallowRef, useId, useTemplateRef } from "vue";
+import { computed, nextTick, onUnmounted, provide, ref, shallowRef, useId, useTemplateRef, watchEffect } from "vue";
 import KonOption from "./KonOption.vue";
 
 type ModelType = undefined | false extends M ? T : T[];
@@ -423,6 +423,18 @@ const fixedStyles = computed(() => {
 	};
 });
 
+watchEffect(() => {
+	if(props.fixed){
+		window.addEventListener("resize", updateFixedDropdown);
+	}else{
+		window.removeEventListener("resize", updateFixedDropdown);
+	}
+});
+
+onUnmounted(() => {
+	window.removeEventListener("resize", updateFixedDropdown);
+});
+
 function defaultSearchFn(items: T[], searchTerm: string){
 	return items.filter((item) => {
 		const searchTextLower = searchTerm.toLowerCase();
@@ -606,12 +618,16 @@ function handleBlur(e: FocusEvent){
 	close();
 }
 
+function updateFixedDropdown(){
+	if(!selectEl.value) return;
+	const { x, y, width, height } = selectEl.value.getBoundingClientRect();
+	fixedPosition.value = { x, y: y + height, width };
+}
+
 function handleOptionsListEnter(){
 	zIndex.value = 999;
 	if(props.fixed){
-		if(!selectEl.value) return;
-		const { x, y, width, height } = selectEl.value.getBoundingClientRect();
-		fixedPosition.value = { x, y: y + height, width };
+		updateFixedDropdown();
 	}
 }
 
