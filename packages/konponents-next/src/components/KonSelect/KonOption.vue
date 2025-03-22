@@ -38,13 +38,16 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const selectRef = inject<Readonly<ShallowRef<HTMLDivElement | null>>>("selectRef");
+const dropdownRef = inject<Readonly<ShallowRef<HTMLDivElement | null>>>("dropdownRef");
 const closeSelect = inject<() => void>("close");
 
+/**
+ * Closes the select component if the focus leaves the element.
+ */
 function handleBlur(e: FocusEvent){
-	if(!selectRef?.value || !closeSelect) return;
-	if(!selectRef.value.contains(e.relatedTarget as Element)){
-		closeSelect();
-	}
+	if(!selectRef?.value || !dropdownRef?.value || !closeSelect) return;
+	if(selectRef.value.contains(e.relatedTarget as Element) || dropdownRef.value.contains(e.relatedTarget as Element)) return;
+	closeSelect();
 }
 
 defineExpose({

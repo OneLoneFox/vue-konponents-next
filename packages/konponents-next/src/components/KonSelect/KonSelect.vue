@@ -141,6 +141,7 @@
 					:style="fixed ? fixedStyles : undefined"
 					v-show="isOpen"
 					ref="dropdown-el"
+					@keydown.stop="handleKeydown"
 				>
 					<TransitionGroup
 						name="kon-options-list"
@@ -156,7 +157,7 @@
 								:value="getItemValue(item)"
 								:selected="isItemSelected(item)"
 								:disabled="disabledItem(item)"
-								@click="handleItemClick(item)"
+								@click.stop="handleItemClick(item)"
 								ref="options"
 								v-slot="{selected}"
 							>
@@ -545,6 +546,7 @@ function handleItemClick(item: T){
 	}else{
 		selectItem(item);
 	}
+	close();
 }
 
 function handleRemoveClick(item: T){
@@ -576,6 +578,7 @@ function handleKeydown(e: KeyboardEvent){
 		case "Escape":
 			e.preventDefault();
 			close();
+			selectEl.value?.focus();
 			break;
 		default:
 			if(isOpen.value && props.filterItems && props.filterInput){
@@ -734,6 +737,7 @@ function focusNextOption(){
 }
 
 provide("selectRef", selectEl);
+provide("dropdownRef", dropdownEl);
 provide("close", close);
 
 </script>
