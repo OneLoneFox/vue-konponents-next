@@ -25,6 +25,7 @@
 		top: var(--dy, 0px);
 		left: var(--dx, 0px);
 		border-radius: 12px;
+
 		&.kon-open {
 			--component-background: var(--kon-surface);
 		}
@@ -47,5 +48,27 @@
 			background: rgb(var(--background-color));
 			border-radius: 5px;
 		}
+	}
+}
+
+.kon-show-options-enter-active,
+.kon-show-options-leave-active {
+	transition-property: max-height, transform, opacity, background-color;
+	transition-timing-function: ease;
+	transition-duration: 250ms;
+	pointer-events: none;
+}
+
+.kon-show-options-enter-from,
+.kon-show-options-leave-to {
+	max-height: 0px;
+	transform: translateY(-12px);
+
+	&.kon-fixed {
+		transform: translateY(0);
+	}
+
+	&>* {
+		opacity: 0;
 	}
 }
