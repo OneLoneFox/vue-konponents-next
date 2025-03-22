@@ -7,18 +7,44 @@
 			'kon-open': isOpen,
 			'kon-has-label': label,
 			'kon-full-width': fullWidth,
-			'kon-error': error
+			'kon-error': error,
+			'kon-fixed': fixed
 		}"
-		:style="{'z-index': isOpen ? '999' : 'auto'}"
+		:style="{'z-index': zIndex}"
 		@click="handleClick"
+		@keydown="handleKeydown"
 		@blur="handleBlur"
 		ref="select-el"
 		:tabindex="shouldDisable ? -1 : 0"
+		:aria-expanded="isOpen ? 'true' : 'false'"
 		:aria-disabled="shouldDisable ? 'true' : 'false'"
+		:aria-labelledby="label ? `kon-select-label-${id}` : undefined"
+		:aria-label="label ? undefined : `select ${id}`"
 		role="combobox"
 	>
-		<input type="hidden" :name="props.name">
+		<select
+			class="kon-multiple-fallback"
+			multiple
+			tabindex="-1"
+			v-if="multiple"
+			aria-hidden="true"
+			:name="name"
+		>
+			<option
+				v-for="selected in (modelValue as T[])"
+				:key="String(getItemValue(selected))"
+				:value="getItemValue(selected)"
+				selected
+			/>
+		</select>
+		<input
+			v-else
+			type="hidden"
+			:name="name"
+			:value="selectedValue"
+		>
 		<label
+			:id="`kon-select-label-${id}`"
 			class="kon-select-label"
 			:class="{'kon-is-placeholder': labelAsPlaceholder, 'kon-elevated': isElevated}"
 			v-if="label"
@@ -27,31 +53,71 @@
 		</label>
 		<span
 			class="kon-placeholder"
-			:class="{'kon-hidden': props.filterItems && props.filterInput && isOpen}"
+			:class="{'kon-hidden': filterItems && filterInput && isOpen}"
 			key="kon-label-placeholder"
-			v-if="!props.modelValue"
+			v-if="!modelValue"
 		>
 			{{ placeholder || '&nbsp;' }}
 		</span>
-		<span
-			class="kon-value"
-			:class="{'kon-value-hidden': filterItems && filterInput && isOpen}"
-			:key="`kon-label-${getItemValue(modelValue)}`"
-			v-else
-		>
-			{{ getItemText(modelValue) }}
-		</span>
-		<input
-			class="kon-filter-input"
-			v-show="filterItems && filterInput && isOpen"
-			type="text"
-			:value="internalSearch"
-			@input="internalSearch = ($event.target as HTMLInputElement).value"
-			@keydown.stop="handleKeydown"
-			@blur.stop="handleBlur"
-			@change.stop=""
-			ref="filter-input"
-		>
+		<template v-else>
+			<template v-if="multiple">
+				<TransitionGroup
+					name="kon-select-multiple-chips"
+					tag="div"
+					class="kon-values"
+				>
+					<div
+						class="kon-value-chip"
+						v-for="item in visibleChips"
+						:key="String(getItemValue(item))"
+					>
+						<span class="kon-value-text">{{ getItemText(item) }}</span>
+						<span class="kon-chip-remove" @click.stop="handleRemoveClick(item)" />
+					</div>
+					<div
+						class="kon-value-chip"
+						key="kon-collapsed-chips"
+						v-if="collapsedItemsCount > 0"
+					>
+						<span class="kon-value-text">{{ `+${collapsedItemsCount}` }}</span>
+					</div>
+					<input
+						class="kon-filter-input"
+						v-if="filterItems && filterInput && isOpen"
+						type="text"
+						key="kon-filter"
+						:placeholder="placeholder"
+						:value="internalSearch"
+						@input="internalSearch = ($event.target as HTMLInputElement).value"
+						@keydown.stop="handleKeydown"
+						@blur.stop="handleBlur"
+						@change.stop=""
+						ref="filter-input"
+					>
+				</TransitionGroup>
+			</template>
+			<template v-else>
+				<span
+					class="kon-value"
+					:class="{'kon-value-hidden': filterItems && filterInput && isOpen}"
+					:key="`kon-label-${selectedValue}`"
+				>
+					{{ getItemText(modelValue as T) }}
+				</span>
+				
+				<input
+					class="kon-filter-input"
+					v-show="filterItems && filterInput && isOpen"
+					type="text"
+					:value="internalSearch"
+					@input="internalSearch = ($event.target as HTMLInputElement).value"
+					@keydown.stop="handleKeydown"
+					@blur.stop="handleBlur"
+					@change.stop=""
+					ref="filter-input"
+				>
+			</template>
+		</template>
 		<div class="chevron">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -67,44 +133,60 @@
 				<polyline points="6 9 12 15 18 9" />
 			</svg>
 		</div>
-		<Transition name="kon-show-options" @before-enter="handleOptionsListEnter" @after-leave="handleOptionsListLeave">
-			<div class="kon-options" v-show="isOpen">
-				<TransitionGroup name="kon-options-list" tag="div" class="kon-options-list">
-					<template v-if="filteredItems.length">
-						<KonOption
-							v-for="item in filteredItems"
-							:key="String(getItemValue(item)) ?? undefined"
-							:value="getItemValue(item)"
-							:selected="getItemValue(modelValue) === getItemValue(item)"
-							:disabled="disabledItem(item)"
-							@click="selectItem($event, item)"
-							ref="options"
-							v-slot="{selected}"
-						>
-							<!-- 
-                                @slot Current KonOption content
-                                    @binding {string|object} item the current item
-                                    @binding {boolean} selected determines if the current item is selected
-                            -->
-							<slot :item="item" :selected="selected">
-								{{ getItemText(item) }}
-							</slot>
-						</KonOption>
-					</template>
-					<template v-else>
-						<KonOption :key="-1" disabled>
-							<!-- 
-                                @slot Empty option message
-                                    @binding {string} search the internal filter search value
-                             -->
-							<slot name="empty" :search="internalSearch || search">
-								{{ (search == '' && internalSearch == '') ? 'No options' : 'No matching results' }}
-							</slot>
-						</KonOption>
-					</template>
-				</TransitionGroup>
-			</div>
-		</Transition>
+		<Teleport :to="fixedTarget ?? 'body'" :disabled="!fixed">
+			<Transition name="kon-show-options" @before-enter="handleOptionsListEnter" @after-leave="handleOptionsListLeave">
+				<div
+					:class="{'kon-open': isOpen, 'kon-fixed': fixed}"
+					class="kon-options"
+					:style="fixed ? fixedStyles : undefined"
+					v-show="isOpen"
+					ref="dropdown-el"
+				>
+					<TransitionGroup
+						name="kon-options-list"
+						tag="div"
+						class="kon-options-list"
+						role="listbox"
+					>
+						<template v-if="filteredItems.length">
+							<KonOption
+								:id="`kon-option-${id}-${getItemValue(item)}`"
+								v-for="item in filteredItems"
+								:key="String(getItemValue(item)) ?? undefined"
+								:value="getItemValue(item)"
+								:selected="isItemSelected(item)"
+								:disabled="disabledItem(item)"
+								@click="handleItemClick(item)"
+								ref="options"
+								v-slot="{selected}"
+							>
+								<!-- 
+									Slot for each option in the options list
+									
+									@prop {numer|string|object} item - The current item, one of `items`
+									@prop {boolean} selected - Wether the current option is selected or not
+								-->
+								<slot :item="item" :selected="selected">
+									{{ getItemText(item) }}
+								</slot>
+							</KonOption>
+						</template>
+						<template v-else>
+							<KonOption :key="-1" disabled>
+								<!-- 
+									Slot for the empty option's content
+									
+									@prop {string} search - The current search value, either the internal search or the one provided via props
+								 -->
+								<slot name="empty" :search="filterInput ? internalSearch : search">
+									{{ (search == '' && internalSearch == '') ? 'No options' : 'No matching results' }}
+								</slot>
+							</KonOption>
+						</template>
+					</TransitionGroup>
+				</div>
+			</Transition>
+		</Teleport>
 		<Transition name="kon-toggle-message">
 			<div class="kon-select-message" v-if="!!$slots.message">
 				<!-- 
@@ -116,10 +198,14 @@
 	</div>
 </template>
 
-<script setup lang="ts" generic="T, K extends keyof T">
-import { computed, ref, useTemplateRef } from "vue";
+<script
+	setup lang="ts"
+	generic="T, K extends keyof T, M extends boolean | undefined"
+>
+import { computed, nextTick, provide, ref, shallowRef, useId, useTemplateRef } from "vue";
 import KonOption from "./KonOption.vue";
 
+type ModelType = undefined | false extends M ? T : T[];
 type FilterFn = (items: T[], searchTerm: string) => T[];
 
 /**
@@ -127,12 +213,36 @@ type FilterFn = (items: T[], searchTerm: string) => T[];
  * the declaration file generation will fail for this file.
  * 
  * https://github.com/vuejs/language-tools/issues/1232#issuecomment-2535894665
+ * 
+ * Also, whenever you see an explicit type cast to T or T[]
+ * that's due to a limitation as of writing where TS is unable to narrow
+ * down generics and thus is unable to narrow down conditional generics
+ * but when multiple is true TS only accepts T[] and we know that
+ * but the engine is still unable to properly narrow it down.
+ * 
+ * Related issue: https://github.com/microsoft/TypeScript/issues/33912
  */
 type Props = {
 	/**
 	 * The v-model value.
 	 */
-	modelValue: T | null;
+	modelValue: ModelType | null;
+	/**
+	 * Determines if the component is a multi select.
+	 * 
+	 * If true `modelValue` will accept an array of selected items and
+	 * `update:modelValue` will also emit an array with the selected items.
+	 */
+	multiple?: M;
+	/**
+	 * When true all selected values after the max amount defined in `maxChips`
+	 * will be collapsed into a single chip with the extra items' count.
+	 */
+	collapseChips?: boolean;
+	/**
+	 * The maximum amount of chips to display before collapsing them.
+	 */
+	maxChips?: number;
 	/**
 	 * Disables all interactions with the component.
 	 */
@@ -245,27 +355,71 @@ type Props = {
 	 * Sets the component's status as error.
 	 */
 	error?: boolean;
+	/**
+	 * When true the options dropdown will be rendered outside the select element
+	 * as a fixed positioned dropdown.
+	 */
+	fixed?: boolean;
+	/**
+	 * CSS selector for the target element to place the
+	 * fixed dropdown into.
+	 */
+	fixedTarget?: string;
 };
 
 const props = withDefaults(defineProps<Props>(), {
 	disabledItem: () => false,
 	disableOnLoading: true,
+	maxChips: 1,
 });
 const emit = defineEmits<{
-	(e: "update:modelValue", value: T): void;
+	(e: "update:modelValue", value: T | T[]): void;
 	(e: "click", ev: MouseEvent): void;
 	(e: "blur", ev: FocusEvent): void;
 	(e: "keydown", ev: KeyboardEvent): void;
 	(e: "keypress", ev: KeyboardEvent): void;
 }>();
 
+const id = useId();
 const isOpen = ref(false);
 const internalSearch = ref("");
-const selectEl = useTemplateRef<HTMLElement>("select-el");
-const filterInputEl = useTemplateRef<HTMLInputElement>("filter-input");
+const zIndex = ref<number | "auto">("auto");
+const fixedPosition = shallowRef({ x: 0, y: 0, width: 0 });
+const selectEl = useTemplateRef("select-el");
+const filterInputEl = useTemplateRef("filter-input");
+const dropdownEl = useTemplateRef("dropdown-el");
+const optionsRefs = useTemplateRef("options");
+
+const selectedValue = computed(() => {
+	if(props.multiple){
+		return null;
+	}
+	return getItemValue(props.modelValue as T);
+});
 
 const isElevated = computed(() => {
 	return props.modelValue !== null && props.modelValue !== undefined;
+});
+
+const visibleChips = computed(() => {
+	if(!props.multiple) return [];
+	if(!props.collapseChips){
+		return props.modelValue as T[];
+	}
+	return (props.modelValue as T[]).slice(0, props.maxChips);
+});
+
+const collapsedItemsCount = computed(() => {
+	if(!props.multiple) return 0;
+	return (props.modelValue as T[]).length - props.maxChips;
+});
+
+const fixedStyles = computed(() => {
+	return {
+		"--dx": `${fixedPosition.value.x}px`,
+		"--dy": `${fixedPosition.value.y}px`,
+		"--width": `${fixedPosition.value.width}px`,
+	};
 });
 
 function defaultSearchFn(items: T[], searchTerm: string){
@@ -276,9 +430,9 @@ function defaultSearchFn(items: T[], searchTerm: string){
 			return itemTextLower.includes(searchTextLower);
 		}
 		/**
-			 * If no filterAttribute or textAttribute were set
-			 * do nothing.
-			 */
+		 * If no filterAttribute or textAttribute were set
+		 * do nothing.
+		 */
 		if(!props.filterAttribute && !props.textAttribute){
 			return true;
 		}
@@ -287,9 +441,9 @@ function defaultSearchFn(items: T[], searchTerm: string){
 		const itemText: unknown = item[attr as K];
 		if(typeof itemText == "string" || typeof itemText == "number"){
 			/**
-				 * Try to search if the attr given is string or number
-				 * do nothing otherwise.
-				 */
+			 * Try to search if the attr given is string or number
+			 * do nothing otherwise.
+			 */
 			const itemTextLower = itemText.toString().toLowerCase();
 			return itemTextLower.includes(searchTextLower);
 		}
@@ -311,17 +465,49 @@ const shouldDisable = computed(() => {
 });
 
 function getItemValue(item: T | null): T | T[K] | null{
-	if(item === null || item === "" || !props.valueAttribute){
+	if(item === null || item === ""){
 		return null;
 	}
-	return typeof item === "object" ? item[props.valueAttribute] : item;
+	if(typeof item === "object"){
+		if(!props.valueAttribute) return null;
+		return item[props.valueAttribute];
+	}
+	return item;
 }
 
 function getItemText(item: T | null): T | T[K] | null{
-	if(item === null || item === "" || !props.textAttribute){
+	if(item === null || item === ""){
 		return null;
 	}
-	return typeof item === "object" ? item[props.textAttribute] : item;
+	if(typeof item === "object"){
+		if(!props.textAttribute) return null;
+		return item[props.textAttribute];
+	}
+	return item;
+}
+
+function selectItem(item: T){
+	if(props.multiple){
+		const selectedItems = [...props.modelValue as T[]];
+		selectedItems.push(item);
+		emit("update:modelValue", selectedItems);
+	}else{
+		const val = getItemValue(item);
+		const oldVal = selectedValue.value;
+		if(val !== oldVal){
+			emit("update:modelValue", item);
+		}
+	}
+	selectEl.value?.focus();
+}
+
+function deselectItem(item: T){
+	if(!props.multiple) return;
+	let selected = [...props.modelValue as T[]];
+	selected = selected.filter((selectedItem) => {
+		return getItemValue(selectedItem) !== getItemValue(item);
+	});
+	emit("update:modelValue", selected);
 }
 
 function open(){
@@ -345,21 +531,50 @@ function handleClick(e: MouseEvent){
 	emit("click", e);
 }
 
-function handleKeydown(e: KeyboardEvent){
-	if(!isOpen.value) return;
-	if(e.code == "Enter" || e.code == "Space"){
-		return;
+/**
+ * Handles toggling of items when props.multiple is true
+ * and simply selecting the item otherwise.
+ */
+function handleItemClick(item: T){
+	if(props.multiple){
+		if(isItemSelected(item)){
+			deselectItem(item);
+		}else{
+			selectItem(item);
+		}
+	}else{
+		selectItem(item);
 	}
+}
+
+function handleRemoveClick(item: T){
+	deselectItem(item);
+}
+
+function handleKeydown(e: KeyboardEvent){
 	switch(e.code){
+		case "Enter":
+		case "Space":
+			if(e.target == selectEl.value && !e.repeat){
+				toggle();
+			}
+			return;
 		case "ArrowUp":
 			e.preventDefault();
-			// focusPreviousOrLast();
+			open();
+			nextTick(() => {
+				focusPreviousOption();
+			});
 			break;
 		case "ArrowDown":
 			e.preventDefault();
-			// FocusNextOrFirst();
+			open();
+			nextTick(() => {
+				focusNextOption();
+			});
 			break;
 		case "Escape":
+			e.preventDefault();
 			close();
 			break;
 		default:
@@ -369,26 +584,156 @@ function handleKeydown(e: KeyboardEvent){
 	}
 }
 
-function selectItem(e: MouseEvent, item: T){
-	const val = getItemValue(item);
-	const oldVal = getItemValue(props.modelValue);
-	if(val !== oldVal){
-		emit("update:modelValue", item);
+function isItemSelected(item: T){
+	if(props.multiple){
+		return (props.modelValue as T[]).some((selectedItem) => {
+			return getItemValue(selectedItem) === getItemValue(item);
+		});
 	}
+	return selectedValue.value === getItemValue(item);
 }
 
 function handleBlur(e: FocusEvent){
-	if(!selectEl.value?.contains(e.relatedTarget as HTMLElement)){
-		close();
+	if(
+		selectEl.value?.contains(e.relatedTarget as HTMLElement) 
+		|| dropdownEl.value?.contains(e.relatedTarget as HTMLElement)
+	){
+		return;
+	}
+	close();
+}
+
+function handleOptionsListEnter(){
+	zIndex.value = 999;
+	if(props.fixed){
+		if(!selectEl.value) return;
+		const { x, y, width, height } = selectEl.value.getBoundingClientRect();
+		fixedPosition.value = { x, y: y + height, width };
 	}
 }
 
-function handleOptionsListEnter(el: Element){
-	console.log(el);
+function handleOptionsListLeave(){
+	zIndex.value = "auto";
 }
 
-function handleOptionsListLeave(el: Element){
-	console.log(el);
+function getPreviousFocusableOption(current: Element): Element | null{
+	let currentEl: Element | null = current;
+	while(currentEl?.previousElementSibling) {
+		currentEl = currentEl.previousElementSibling;
+		if(!currentEl?.matches(":disabled")){
+			return currentEl;
+		}
+	}
+	return null;
 }
+
+function getNextFocusableOption(current: Element): Element | null{
+	let currentEl: Element | null = current;
+	while(currentEl?.nextElementSibling){
+		currentEl = currentEl.nextElementSibling;
+		if(!currentEl?.matches(":disabled")){
+			return currentEl;
+		}
+	}
+	return null;
+}
+
+/**
+ * Wether the current DOM focus is a KonOption
+ */
+function isCurrentFocusOption(parent: HTMLElement){
+	if(!document.activeElement){
+		return false;
+	}
+	if(!parent.contains(document.activeElement)){
+		return false;
+	}
+	if(!document.activeElement.classList.contains("kon-option")){
+		return false;
+	}
+	return true;
+}
+
+function getCurrentlySelectedOption(): Element | null{
+	if(!props.modelValue || props.multiple || !optionsRefs.value){
+		return null;
+	}
+	const found = optionsRefs.value.find((optionRef) => {
+		return getItemValue(optionRef?.props.value as T) === getItemValue(props.modelValue as T);
+	});
+	if(!found){
+		return null;
+	}
+	return found.$el;
+}
+
+/**
+ * If the current selected option is available focuses and returns
+ * the Element. If not, attempts to focus the last option
+ * if not disabled and returns null.
+ */
+function focusLastOrSelectedOption(){
+	const selectedOption = getCurrentlySelectedOption();
+	if(selectedOption){
+		(selectedOption as HTMLElement).focus();
+		return selectedOption;
+	}
+	const lastOption = optionsRefs.value?.at(-1)?.$el as HTMLElement | undefined;
+	if(lastOption?.matches(":disabled")){
+		return null;
+	}
+	lastOption?.focus();
+	return null;
+}
+
+function focusPreviousOption(){
+	if(!optionsRefs.value?.length || !dropdownEl.value) return;
+	let current: Element | null = null;
+	if(isCurrentFocusOption(dropdownEl.value)){
+		current = document.activeElement;
+	}else{
+		current = focusLastOrSelectedOption();
+	}
+	if(!current) return;
+	const focusable = getPreviousFocusableOption(current);
+	if(!focusable) return;
+	(focusable as HTMLElement).focus();
+}
+
+/**
+ * If the current selected option is available focuses and returns
+ * the Element. If not, attempts to focus the first option
+ * if not disabled and returns null.
+ */
+function focusFirstOrSelectedOption(){
+	const selectedOption = getCurrentlySelectedOption();
+	if(selectedOption){
+		(selectedOption as HTMLElement).focus();
+		return selectedOption;
+	}
+	const firstOption = optionsRefs.value?.[0]?.$el as HTMLElement | undefined;
+	if(firstOption?.matches(":disabled")){
+		return null;
+	}
+	firstOption?.focus();
+	return null;
+}
+
+function focusNextOption(){
+	if(!optionsRefs.value?.length || !dropdownEl.value) return;
+	let current: Element | null = null;
+	if(isCurrentFocusOption(dropdownEl.value)){
+		current = document.activeElement;
+	}else{
+		current = focusFirstOrSelectedOption();
+	}
+	if(!current) return;
+	const focusable = getNextFocusableOption(current);
+	if(!focusable) return;
+	(focusable as HTMLElement).focus();
+}
+
+provide("selectRef", selectEl);
+provide("close", close);
 
 </script>

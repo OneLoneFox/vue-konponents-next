@@ -11,13 +11,28 @@
 		</div>
 		<div class="code">
 			<div class="controls">
-				<button v-if="props.testFocus" class="control" @click="setFocus">
+				<button
+					aria-label="Test keyboard navigation"
+					v-if="props.testFocus"
+					class="control"
+					@click="setFocus"
+				>
 					<Keyboard :size="16" />
 				</button>
-				<button class="control" :class="{expanded: expandedResults}" @click="toggleResults">
+				<button
+					aria-label="Show results snippet"
+					class="control"
+					:class="{expanded: expandedResults}"
+					@click="toggleResults"
+				>
 					<View :size="16" />
 				</button>
-				<button class="control" :class="{expanded: expandedCode}" @click="toggleCode">
+				<button
+					aria-label="Show code snippet"
+					class="control"
+					:class="{expanded: expandedCode}"
+					@click="toggleCode"
+				>
 					<Code2 :size="16" />
 				</button>
 			</div>

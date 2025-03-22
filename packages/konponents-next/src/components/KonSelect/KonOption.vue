@@ -1,32 +1,53 @@
 <template>
-	<button 
+	<button
+		:id="id"
 		class="kon-option" 
-		:class="{'selected': selected}"
+		:class="{'kon-selected': selected}"
 		:disabled="disabled"
 		:aria-selected="selected ? 'true' : 'false'"
 		tabindex="-1"
-		type="button"
 		role="option"
 		v-ripple
+		@blur="handleBlur"
 	>
-		<!-- 
-            @slot Option Content
-                @binding {boolean} isSelected is this option selected
-         -->
-		<slot :selected="selected" />
+		<span class="kon-content">
+			<!-- 
+				The option's content
+				
+				@prop {boolean} selected - Wether this option is selected or not
+			 -->
+			<slot :selected="selected" />
+		</span>
 	</button>
 </template>
 
 
 <script setup lang="ts">
 import { rippleDirective as vRipple } from "@/directives/kon-ripple";
+import { inject, type ShallowRef } from "vue";
 interface Props {
+	id?: string;
+	value?: unknown;
 	selected?: boolean;
 	label?: string;
 	disabled?: boolean;
 
 }
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
 	label: ""
+});
+
+const selectRef = inject<Readonly<ShallowRef<HTMLDivElement | null>>>("selectRef");
+const closeSelect = inject<() => void>("close");
+
+function handleBlur(e: FocusEvent){
+	if(!selectRef?.value || !closeSelect) return;
+	if(!selectRef.value.contains(e.relatedTarget as Element)){
+		closeSelect();
+	}
+}
+
+defineExpose({
+	props
 });
 </script>

@@ -1,0 +1,49 @@
+.kon-option {
+	position: relative;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	border-radius: 8px;
+	padding: 8px 12px;
+	margin-bottom: 2px;
+	cursor: pointer;
+	transition-property: color, background, opacity;
+	transition-timing-function: ease;
+	transition-duration: 250ms;
+	overflow: hidden;
+	color: var(--component-foreground);
+	text-align: left;
+	/* reset default buttons styles */
+	border: none;
+	background: none;
+	outline: none;
+	font-family: inherit;
+
+	& > .kon-content{
+		transition: transform 250ms ease;
+		transform: translateX(0px);
+	}
+
+	&:disabled {
+		cursor: auto;
+		opacity: 0.6;
+	}
+
+	&:hover:not(:disabled),
+	&:focus-visible {
+		color: var(--kon-primary);
+		background: rgba(var(--kon-primary-rgb), 0.05);
+		& > .kon-content{
+			transform: translateX(4px);
+		}
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	&.kon-selected {
+		background: rgba(var(--kon-primary-rgb), 0.1);
+		color: var(--kon-primary);
+	}
+}

@@ -1,38 +1,51 @@
-.kon-select,
-.kon-select-multiple {
-	& .kon-options {
-		will-change: max-height;
-		position: absolute;
-		top: 100%;
-		left: 0;
-		max-height: 208px;
+.kon-options {
+	--font-size: 0.8rem;
+	will-change: max-height;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	max-height: 208px;
+	width: 100%;
+	color: var(--component-foreground);
+	background: var(--component-background);
+	padding: 4px;
+	border-radius: 0px 0px 12px 12px;
+	z-index: 1;
+	overflow: hidden;
+	transform: translateY(0);
+	transition: background 250ms ease;
+	font-size: var(--font-size);
+
+	&.kon-fixed {
+		--component-background: var(--kon-surface-container);
+		--component-foreground: var(--kon-on-surface);
+		position: fixed;
+		z-index: 999;
+		width: var(--width, 200px);
+		top: var(--dy, 0px);
+		left: var(--dx, 0px);
+		border-radius: 12px;
+		&.kon-open {
+			--component-background: var(--kon-surface);
+		}
+	}
+
+	& .kon-options-list {
+		transition: opacity 100ms linear;
 		width: 100%;
-		color: var(--component-foreground);
-		background: var(--component-background);
-		padding: 4px;
-		border-radius: 0px 0px 12px 12px;
-		z-index: 1;
-		overflow: hidden;
-		transform: translateY(0);
-		transition: background 250ms ease;
+		max-height: 200px;
+		overflow: auto;
 
-		& .kon-options-list {
-			transition: opacity 100ms linear;
-			width: 100%;
-			max-height: 200px;
-			overflow: auto;
+		&::-webkit-scrollbar {
+			width: 5px;
+			height: 5px;
+			display: block;
+			background: transparent;
+		}
 
-			&::-webkit-scrollbar {
-				width: 5px;
-				height: 5px;
-				display: block;
-				background: transparent;
-			}
-
-			&::-webkit-scrollbar-thumb {
-				background: rgb(var(--background-color));
-				border-radius: 5px;
-			}
+		&::-webkit-scrollbar-thumb {
+			background: rgb(var(--background-color));
+			border-radius: 5px;
 		}
 	}
 }

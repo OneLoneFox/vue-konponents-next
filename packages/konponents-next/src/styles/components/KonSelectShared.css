@@ -90,22 +90,22 @@
 		font-size: .7rem;
 		color: var(--current-label-color);
 	}
+}
 
-	& .kon-show-options-enter-active,
-	.kon-show-options-leave-active {
-		transition-property: max-height, transform, opacity, background-color;
-		transition-timing-function: ease;
-		transition-duration: 250ms;
-		pointer-events: none;
-	}
+& .kon-show-options-enter-active,
+.kon-show-options-leave-active {
+	transition-property: max-height, transform, opacity, background-color;
+	transition-timing-function: ease;
+	transition-duration: 250ms;
+	pointer-events: none;
+}
 
-	& .kon-show-options-enter-from,
-	.kon-show-options-leave-to {
-		max-height: 0px;
-		transform: translateY(-12px);
+& .kon-show-options-enter-from,
+.kon-show-options-leave-to {
+	max-height: 0px;
+	transform: translateY(-12px);
 
-		&>* {
-			opacity: 0;
-		}
+	&>* {
+		opacity: 0;
 	}
 }

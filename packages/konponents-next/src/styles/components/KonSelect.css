@@ -27,7 +27,7 @@
 		transform: translateY(-4px);
 	}
 
-	&.kon-open:not(.detached) {
+	&.kon-open:not(.kon-fixed) {
 		border-radius: 12px 12px 0px 0px;
 	}
 
@@ -54,7 +54,7 @@
 	}
 
 	& .kon-placeholder{
-		opacity: 0.4;
+		opacity: 0.6;
 	}
 
 	.kon-filter-input {

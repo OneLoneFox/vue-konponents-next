@@ -27,4 +27,7 @@
   font-family: inherit;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  &:focus-visible{
+    outline: none;
+  }
 }

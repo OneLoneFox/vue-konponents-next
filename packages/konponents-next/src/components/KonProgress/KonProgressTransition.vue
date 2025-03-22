@@ -24,7 +24,6 @@ function propTransition(el: Element, done: () => void, startValue: number, endVa
 		done();
 		return;
 	}
-	console.log(trackEls, trackEls.length);
 	trackEls.forEach((el) => el.style.setProperty("--stroke-scale", startValue.toString()));
 	strokeEl.style.setProperty("--stroke-scale", startValue.toString());
 	requestAnimationFrame(() => {
