@@ -16,7 +16,8 @@
 
 	&:hover,
 	&:focus,
-	&:focus-within {
+	&:focus-within,
+	&.kon-open {
 		/* {13, ..., 21} */
 		--component-background: var(--kon-surface);
 		/* Use filter instead of box shadow since we are applying a shadow to the shole thing and we don't want overlaps */
