@@ -7,8 +7,9 @@
 			'kon-open': isOpen,
 			'kon-has-label': label,
 			'kon-full-width': fullWidth,
+			'kon-multiple': multiple,
 			'kon-error': error,
-			'kon-fixed': fixed
+			'kon-fixed': fixed,
 		}"
 		:style="{'z-index': zIndex}"
 		@click="handleClick"
@@ -20,6 +21,7 @@
 		:aria-disabled="shouldDisable ? 'true' : 'false'"
 		:aria-labelledby="label ? `kon-select-label-${id}` : undefined"
 		:aria-label="label ? undefined : `select ${id}`"
+		:aria-controls="`select-${id}-listbox`"
 		role="combobox"
 	>
 		<select
@@ -55,60 +57,59 @@
 			class="kon-placeholder"
 			:class="{'kon-hidden': filterItems && filterInput && isOpen}"
 			key="kon-label-placeholder"
-			v-if="!modelValue"
+			v-if="multiple ? !(modelValue as T[]).length : !(modelValue as T)"
 		>
 			{{ placeholder || '&nbsp;' }}
 		</span>
 		<template v-else>
-			<template v-if="multiple">
-				<TransitionGroup
-					name="kon-select-multiple-chips"
-					tag="div"
-					class="kon-values"
-				>
-					<div
-						class="kon-value-chip"
-						v-for="item in visibleChips"
-						:key="String(getItemValue(item))"
-					>
-						<span class="kon-value-text">{{ getItemText(item) }}</span>
-						<span class="kon-chip-remove" @click.stop="handleRemoveClick(item)" />
-					</div>
-					<div
-						class="kon-value-chip"
-						key="kon-collapsed-chips"
-						v-if="collapsedItemsCount > 0"
-					>
-						<span class="kon-value-text">{{ `+${collapsedItemsCount}` }}</span>
-					</div>
-					<input
-						class="kon-filter-input"
-						v-if="filterItems && filterInput && isOpen"
-						type="text"
-						key="kon-filter"
-						:placeholder="placeholder"
-						:value="internalSearch"
-						@input="internalSearch = ($event.target as HTMLInputElement).value"
-						@keydown.stop="handleKeydown"
-						@blur.stop="handleBlur"
-						@change.stop=""
-						ref="filter-input"
-					>
-				</TransitionGroup>
-			</template>
-			<template v-else>
-				<span
-					class="kon-value"
-					:class="{'kon-value-hidden': filterItems && filterInput && isOpen}"
-					:key="`kon-label-${selectedValue}`"
-				>
-					{{ getItemText(modelValue as T) }}
-				</span>
+			<span
+				class="kon-value"
+				:class="{'kon-value-hidden': filterItems && filterInput && isOpen}"
+				:key="`kon-label-${selectedValue}`"
+			>
+				{{ getItemText(modelValue as T) }}
+			</span>
 				
+			<input
+				class="kon-filter-input"
+				v-show="filterItems && filterInput && isOpen"
+				type="text"
+				:value="internalSearch"
+				@input="internalSearch = ($event.target as HTMLInputElement).value"
+				@keydown.stop="handleKeydown"
+				@blur.stop="handleBlur"
+				@change.stop=""
+				ref="filter-input"
+			>
+		</template>
+		<template v-if="multiple">
+			<TransitionGroup
+				name="kon-select-multiple-chips"
+				tag="div"
+				class="kon-values"
+				@before-leave="handleBeforeChipLeave"
+			>
+				<div
+					class="kon-value-chip"
+					v-for="item in visibleChips"
+					:key="String(getItemValue(item))"
+				>
+					<span class="kon-value-text">{{ getItemText(item) }}</span>
+					<span class="kon-chip-remove" @click.stop="handleRemoveClick(item)" />
+				</div>
+				<div
+					class="kon-value-chip"
+					key="kon-collapsed-chips"
+					v-if="collapseChips && collapsedItemsCount > 0"
+				>
+					<span class="kon-value-text">{{ `+${collapsedItemsCount}` }}</span>
+				</div>
 				<input
 					class="kon-filter-input"
-					v-show="filterItems && filterInput && isOpen"
+					v-if="filterItems && filterInput && isOpen"
 					type="text"
+					key="kon-filter"
+					:placeholder="placeholder"
 					:value="internalSearch"
 					@input="internalSearch = ($event.target as HTMLInputElement).value"
 					@keydown.stop="handleKeydown"
@@ -116,7 +117,7 @@
 					@change.stop=""
 					ref="filter-input"
 				>
-			</template>
+			</TransitionGroup>
 		</template>
 		<div class="chevron">
 			<svg
@@ -146,8 +147,10 @@
 					<TransitionGroup
 						name="kon-options-list"
 						tag="div"
+						:id="`select-${id}-listbox`"
 						class="kon-options-list"
 						role="listbox"
+						tabindex="-1"
 					>
 						<template v-if="filteredItems.length">
 							<KonOption
@@ -222,6 +225,11 @@ type FilterFn = (items: T[], searchTerm: string) => T[];
  * but the engine is still unable to properly narrow it down.
  * 
  * Related issue: https://github.com/microsoft/TypeScript/issues/33912
+ * 
+ * Generics also break runtime boolean inference aka setting a boolean
+ * prop with just my-bool instead of :my-bool="true"
+ * 
+ * Tracked in: https://github.com/vuejs/core/issues/12872
  */
 type Props = {
 	/**
@@ -510,8 +518,8 @@ function selectItem(item: T){
 		if(val !== oldVal){
 			emit("update:modelValue", item);
 		}
+		selectEl.value?.focus();
 	}
-	selectEl.value?.focus();
 }
 
 function deselectItem(item: T){
@@ -557,8 +565,8 @@ function handleItemClick(item: T){
 		}
 	}else{
 		selectItem(item);
+		close();
 	}
-	close();
 }
 
 function handleRemoveClick(item: T){
@@ -625,14 +633,17 @@ function updateFixedDropdown(){
 }
 
 function handleOptionsListEnter(){
-	zIndex.value = 999;
 	if(props.fixed){
 		updateFixedDropdown();
+	}else{
+		zIndex.value = 999;
 	}
 }
 
 function handleOptionsListLeave(){
-	zIndex.value = "auto";
+	if(!props.fixed){
+		zIndex.value = "auto";
+	}
 }
 
 function getPreviousFocusableOption(current: Element): Element | null{
@@ -750,6 +761,21 @@ function focusNextOption(){
 	const focusable = getNextFocusableOption(current);
 	if(!focusable) return;
 	(focusable as HTMLElement).focus();
+}
+
+/**
+ * This function forces the leaving chip to stay in its place since
+ * it becomes a position absolute element when leaving but that also
+ * forces it to leave the flex flow and position itself at the 0,0.
+ * 
+ */
+function handleBeforeChipLeave(el: Element){
+	const chip = el as HTMLElement;
+	const { marginLeft, marginTop, width, height } = window.getComputedStyle(chip);
+	chip.style.left = `${chip.offsetLeft - parseFloat(marginLeft)}px`;
+	chip.style.top = `${chip.offsetTop - parseFloat(marginTop)}px`;
+	chip.style.width = width;
+	chip.style.height = height;
 }
 
 provide("selectRef", selectEl);
