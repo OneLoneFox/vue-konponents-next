@@ -63,22 +63,23 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 10px;
-		color: rgba(var(--kon-on-surface), 0.4);
 		/* Text must stay on top of the option menu to prevent getting occluded during the reveal transition */
 		z-index: 2;
 
 		& .kon-value-chip,
 		& .kon-filter-input {
+
 			&.kon-select-multiple-chips-enter-from,
-			&.kon-select-multiple-chips-leave-to{
+			&.kon-select-multiple-chips-leave-to {
 				opacity: 0;
 			}
 
 			&.kon-select-multiple-chips-enter-active,
-			&.kon-select-multiple-chips-leave-active{
+			&.kon-select-multiple-chips-leave-active {
 				transition: opacity 250ms ease;
 			}
-			&.kon-select-multiple-chips-leave-active{
+
+			&.kon-select-multiple-chips-leave-active {
 				position: absolute;
 			}
 		}
@@ -161,7 +162,6 @@
 	& .kon-placeholder+.kon-values {
 		position: absolute;
 		top: 0;
-		width: 100%;
 		height: 100%;
 	}
 
@@ -169,7 +169,7 @@
 		opacity: 0.6;
 	}
 
-	& .kon-filter-input:not(.kon-multiple) {
+	&:not(.kon-multiple) .kon-filter-input {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -182,21 +182,22 @@
 		color: rgb(var(--component-foreground));
 	}
 
-	& .kon-filter-input.kon-multiple {
+	&.kon-multiple .kon-filter-input {
 		display: inline-block;
 		flex: 1;
 		max-width: 100%;
 		min-width: 80px;
-		padding-left: 4px;
-		font-family: 'Poppins';
 		font-size: var(--font-size);
 		transition-property: opacity, transform;
 		transition-duration: 250ms;
 		transition-timing-function: ease;
-		color: var(--current-foreground-color);
+		color: var(--component-foreground);
 		background: none;
 		border: none;
 		z-index: 3;
+		&::placeholder{
+			color: rgba(var(--kon-on-surface-rgb), 0.6);
+		}
 	}
 
 	&.kon-select-label-enter-active,

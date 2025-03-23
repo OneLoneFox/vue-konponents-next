@@ -55,13 +55,13 @@
 		</label>
 		<span
 			class="kon-placeholder"
-			:class="{'kon-hidden': filterItems && filterInput && isOpen}"
+			:class="{'kon-hidden': filterItems && filterInput}"
 			key="kon-label-placeholder"
 			v-if="multiple ? !(modelValue as T[]).length : !(modelValue as T)"
 		>
 			{{ placeholder || '&nbsp;' }}
 		</span>
-		<template v-else>
+		<template v-else-if="!multiple">
 			<span
 				class="kon-value"
 				:class="{'kon-value-hidden': filterItems && filterInput && isOpen}"
@@ -69,7 +69,6 @@
 			>
 				{{ getItemText(modelValue as T) }}
 			</span>
-				
 			<input
 				class="kon-filter-input"
 				v-show="filterItems && filterInput && isOpen"
@@ -106,7 +105,7 @@
 				</div>
 				<input
 					class="kon-filter-input"
-					v-if="filterItems && filterInput && isOpen"
+					v-if="filterItems && filterInput"
 					type="text"
 					key="kon-filter"
 					:placeholder="placeholder"
@@ -135,7 +134,7 @@
 			</svg>
 		</div>
 		<Teleport :to="fixedTarget ?? 'body'" :disabled="!fixed">
-			<Transition name="kon-show-options" @before-enter="handleOptionsListEnter" @after-leave="handleOptionsListLeave">
+			<Transition name="kon-show-options" @before-enter="handleBeforeDropdownEnter" @after-leave="handleAfterDropdownLeave">
 				<div
 					:class="{'kon-open': isOpen, 'kon-fixed': fixed}"
 					class="kon-options"
@@ -632,7 +631,7 @@ function updateFixedDropdown(){
 	fixedPosition.value = { x, y: y + height, width };
 }
 
-function handleOptionsListEnter(){
+function handleBeforeDropdownEnter(){
 	if(props.fixed){
 		updateFixedDropdown();
 	}else{
@@ -640,7 +639,7 @@ function handleOptionsListEnter(){
 	}
 }
 
-function handleOptionsListLeave(){
+function handleAfterDropdownLeave(){
 	if(!props.fixed){
 		zIndex.value = "auto";
 	}
