@@ -9,7 +9,7 @@
 			'kon-full-width': fullWidth,
 			'kon-multiple': multiple,
 			'kon-error': error,
-			'kon-fixed': fixed,
+			'kon-popover': popover,
 		}"
 		:style="{'z-index': zIndex}"
 		@click="handleClick"
@@ -133,12 +133,12 @@
 				<polyline points="6 9 12 15 18 9" />
 			</svg>
 		</div>
-		<Teleport :to="fixedTarget ?? 'body'" :disabled="!fixed">
+		<Teleport :to="popoverTarget ?? 'body'" :disabled="!popover">
 			<Transition name="kon-show-options" @before-enter="handleBeforeDropdownEnter" @after-leave="handleAfterDropdownLeave">
 				<div
-					:class="{'kon-open': isOpen, 'kon-fixed': fixed}"
+					:class="{'kon-open': isOpen, 'kon-popover': popover}"
 					class="kon-options"
-					:style="fixed ? fixedStyles : undefined"
+					:style="popover ? popoverStyles : undefined"
 					v-show="isOpen"
 					ref="dropdown-el"
 					@keydown.stop="handleKeydown"
@@ -366,14 +366,14 @@ type Props = {
 	error?: boolean;
 	/**
 	 * When true the options dropdown will be rendered outside the select element
-	 * as a fixed positioned dropdown.
+	 * as an absolutely positioned element.
 	 */
-	fixed?: boolean;
+	popover?: boolean;
 	/**
 	 * CSS selector for the target element to place the
-	 * fixed dropdown into.
+	 * popover dropdown into.
 	 */
-	fixedTarget?: string;
+	popoverTarget?: string;
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -393,7 +393,7 @@ const id = useId();
 const isOpen = ref(false);
 const internalSearch = ref("");
 const zIndex = ref<number | "auto">("auto");
-const fixedPosition = shallowRef({ x: 0, y: 0, width: 0 });
+const popoverPosition = shallowRef({ x: 0, y: 0, width: 0 });
 const selectEl = useTemplateRef("select-el");
 const filterInputEl = useTemplateRef("filter-input");
 const dropdownEl = useTemplateRef("dropdown-el");
@@ -424,19 +424,19 @@ const collapsedItemsCount = computed(() => {
 	return (props.modelValue as T[]).length - props.maxChips;
 });
 
-const fixedStyles = computed(() => {
+const popoverStyles = computed(() => {
 	return {
-		"--dx": `${fixedPosition.value.x}px`,
-		"--dy": `${fixedPosition.value.y}px`,
-		"--width": `${fixedPosition.value.width}px`,
+		"--dx": `${popoverPosition.value.x}px`,
+		"--dy": `${popoverPosition.value.y}px`,
+		"--width": `${popoverPosition.value.width}px`,
 	};
 });
 
 watchEffect(() => {
-	if(props.fixed){
-		window.addEventListener("resize", updateFixedDropdown);
+	if(props.popover){
+		window.addEventListener("resize", updatePopoverDropdown);
 	}else{
-		window.removeEventListener("resize", updateFixedDropdown);
+		window.removeEventListener("resize", updatePopoverDropdown);
 	}
 });
 
@@ -446,13 +446,13 @@ onMounted(() => {
 	 * potential load CLS
 	 */
 	requestAnimationFrame(() => {
-		if(!selectEl.value || !props.fixed) return;
-		setFixedDropdownPosition(selectEl.value);
+		if(!selectEl.value || !props.popover) return;
+		setPopoverDropdownPosition(selectEl.value);
 	});
 });
 
 onUnmounted(() => {
-	window.removeEventListener("resize", updateFixedDropdown);
+	window.removeEventListener("resize", updatePopoverDropdown);
 });
 
 function defaultSearchFn(items: T[], searchTerm: string){
@@ -638,27 +638,26 @@ function handleBlur(e: FocusEvent){
 	close();
 }
 
-function setFixedDropdownPosition(el: HTMLElement){
+function setPopoverDropdownPosition(el: HTMLElement){
 	const { x, y, width, height } = el.getBoundingClientRect();
-	console.table({ x, y, width, height });
-	fixedPosition.value = { x, y: y + height, width };
+	popoverPosition.value = { x, y: y + height, width };
 }
 
-function updateFixedDropdown(){
+function updatePopoverDropdown(){
 	if(!selectEl.value || !isOpen.value) return;
-	setFixedDropdownPosition(selectEl.value);
+	setPopoverDropdownPosition(selectEl.value);
 }
 
 function handleBeforeDropdownEnter(){
-	if(props.fixed){
-		updateFixedDropdown();
+	if(props.popover){
+		updatePopoverDropdown();
 	}else{
 		zIndex.value = 999;
 	}
 }
 
 function handleAfterDropdownLeave(){
-	if(!props.fixed){
+	if(!props.popover){
 		zIndex.value = "auto";
 	}
 }

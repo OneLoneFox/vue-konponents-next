@@ -16,10 +16,10 @@
 	transition: background 250ms ease;
 	font-size: var(--font-size);
 
-	&.kon-fixed {
+	&.kon-popover {
 		--component-background: var(--kon-surface-container);
 		--component-foreground: var(--kon-on-surface);
-		position: fixed;
+		position: absolute;
 		z-index: 999;
 		width: var(--width, 200px);
 		top: var(--dy, 0px);
@@ -66,7 +66,7 @@
 	max-height: 0px;
 	transform: translateY(-12px);
 
-	&.kon-fixed {
+	&.kon-popover {
 		transform: translateY(0);
 	}
 

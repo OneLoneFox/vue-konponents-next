@@ -32,7 +32,7 @@
 		transform: translateY(-4px);
 	}
 
-	&.kon-open:not(.kon-fixed) {
+	&.kon-open:not(.kon-popover) {
 		border-radius: 12px 12px 0px 0px;
 	}
 
