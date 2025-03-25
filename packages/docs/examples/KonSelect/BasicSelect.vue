@@ -9,12 +9,20 @@
 		:disabled-item="(item) => item.id == 1 || item.id == 2 || item.id == 3"
 	/>
 	<KonSelect
-		placeholder="fixed"
+		placeholder="popover"
 		v-model="val"
 		:items="options"
 		value-attribute="id"
 		text-attribute="text"
-		:fixed="true"
+		:popover="true"
+	/>
+	<KonSelect
+		filter-items
+		filter-input
+		placeholder="multiple"
+		v-model="valMultiple"
+		:items="['option 1', 'option 2', 'option 3', 'option 4', 'option 5', 'option 6']"
+		:multiple="true"
 	/>
 	<select>
 		<option value="1">
@@ -41,5 +49,6 @@ import { ref } from "vue";
 
 const options = ref([{ id: 1, text: "A" }, { id: 2, text: "B" }, { id: 3, text: "C" }]);
 const valSimple = ref<string>(null);
+const valMultiple = ref<string[]>([]);
 const val = ref<{ id: number; text: string }>(null);
 </script>
