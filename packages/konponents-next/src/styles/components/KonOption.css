@@ -18,7 +18,6 @@
 	background: none;
 	outline: none;
 	font-family: inherit;
-
 	& > .kon-content{
 		transition: transform 250ms ease;
 		transform: translateX(0px);
@@ -45,5 +44,21 @@
 	&.kon-selected {
 		background: rgba(var(--kon-primary-rgb), 0.1);
 		color: var(--kon-primary);
+	}
+
+	&.kon-options-list-move,
+	&.kon-options-list-enter-active,
+	&.kon-options-list-leave-active{
+		transition: all 250ms ease;
+	}
+
+	&.kon-options-list-leave-active{
+		position: absolute;
+	}
+
+	&.kon-options-list-enter-from,
+	&.kon-options-list-leave-to{
+		opacity: 0;
+		margin-bottom: 0;
 	}
 }

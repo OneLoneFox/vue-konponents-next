@@ -32,7 +32,9 @@
 	}
 
 	& .kon-options-list {
-		transition: opacity 100ms linear;
+		transition-property: opacity, height;
+		transition-duration: 100ms, 250ms;
+		transition-timing-function: linear, ease;
 		width: 100%;
 		max-height: 200px;
 		overflow: auto;

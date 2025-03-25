@@ -150,6 +150,7 @@
 						class="kon-options-list"
 						role="listbox"
 						tabindex="-1"
+						ref="options-list-el"
 					>
 						<template v-if="filteredItems.length">
 							<KonOption
@@ -396,6 +397,7 @@ const fixedPosition = shallowRef({ x: 0, y: 0, width: 0 });
 const selectEl = useTemplateRef("select-el");
 const filterInputEl = useTemplateRef("filter-input");
 const dropdownEl = useTemplateRef("dropdown-el");
+const optionsListEl = useTemplateRef("options-list-el");
 const optionsRefs = useTemplateRef("options");
 
 const selectedValue = computed(() => {
@@ -644,6 +646,30 @@ function handleAfterDropdownLeave(){
 		zIndex.value = "auto";
 	}
 }
+
+watch(filteredItems, () => {
+	if(!isOpen.value) return;
+	const el = optionsListEl.value?.$el as HTMLElement;
+	// Set initial explicit height
+	el.style.setProperty("height", `${el.clientHeight}px`);
+	/**
+	 * On next animation frame, after the transition
+	 * group has taken over and we can get the new height
+	 * with filtered items.
+	 */
+	requestAnimationFrame(() => {
+		// Get initial height
+		const from = el.clientHeight;
+		// Set height to auto and get the new height
+		el.style.setProperty("height", "auto");
+		const to = el.clientHeight;
+
+		el.style.setProperty("height", `${from}px`);
+		/* Force repaint */
+		void el.clientHeight;
+		el.style.setProperty("height", `${to}px`);
+	});
+});
 
 function getPreviousFocusableOption(current: Element): Element | null{
 	let currentEl: Element | null = current;
