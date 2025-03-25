@@ -47,7 +47,7 @@
 		}
 
 		&::-webkit-scrollbar-thumb {
-			background: rgb(var(--background-color));
+			background: var(--kon-surface-container);
 			border-radius: 5px;
 		}
 	}
