@@ -206,7 +206,7 @@
 	setup lang="ts"
 	generic="T, K extends keyof T, M extends boolean | undefined"
 >
-import { computed, nextTick, onUnmounted, provide, ref, shallowRef, useId, useTemplateRef, watchEffect } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, provide, ref, shallowRef, useId, useTemplateRef, watch, watchEffect } from "vue";
 import KonOption from "./KonOption.vue";
 
 type ModelType = undefined | false extends M ? T : T[];
@@ -440,6 +440,17 @@ watchEffect(() => {
 	}
 });
 
+onMounted(() => {
+	/**
+	 * Defer to next animation frame to account for
+	 * potential load CLS
+	 */
+	requestAnimationFrame(() => {
+		if(!selectEl.value || !props.fixed) return;
+		setFixedDropdownPosition(selectEl.value);
+	});
+});
+
 onUnmounted(() => {
 	window.removeEventListener("resize", updateFixedDropdown);
 });
@@ -627,10 +638,15 @@ function handleBlur(e: FocusEvent){
 	close();
 }
 
-function updateFixedDropdown(){
-	if(!selectEl.value) return;
-	const { x, y, width, height } = selectEl.value.getBoundingClientRect();
+function setFixedDropdownPosition(el: HTMLElement){
+	const { x, y, width, height } = el.getBoundingClientRect();
+	console.table({ x, y, width, height });
 	fixedPosition.value = { x, y: y + height, width };
+}
+
+function updateFixedDropdown(){
+	if(!selectEl.value || !isOpen.value) return;
+	setFixedDropdownPosition(selectEl.value);
 }
 
 function handleBeforeDropdownEnter(){
