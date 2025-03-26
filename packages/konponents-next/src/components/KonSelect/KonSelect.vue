@@ -89,6 +89,9 @@
 				class="kon-values"
 				@before-leave="handleBeforeChipLeave"
 			>
+				<template v-if="visibleChips.length == 0">
+					&nbsp;
+				</template>
 				<div
 					class="kon-value-chip"
 					v-for="item in visibleChips"
