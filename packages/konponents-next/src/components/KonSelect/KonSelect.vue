@@ -649,6 +649,9 @@ function handleKeydown(e: KeyboardEvent){
 			selectEl.value?.focus();
 			break;
 		default:
+			if(["Shift", "Control", "Alt", "Tab"].includes(e.key)){
+				return;
+			}
 			if(isOpen.value && props.filterItems && props.filterInput){
 				filterInputEl.value?.focus();
 			}
