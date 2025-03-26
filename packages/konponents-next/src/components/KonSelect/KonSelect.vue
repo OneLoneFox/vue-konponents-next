@@ -56,7 +56,7 @@
 		</label>
 		<span
 			class="kon-placeholder"
-			:class="{'kon-hidden': filterItems && filterInput}"
+			:class="{'kon-hidden': filterItems && filterInput && (multiple ? true : isOpen)}"
 			key="kon-label-placeholder"
 			v-if="multiple ? !(modelValue as T[]).length : !(modelValue as T)"
 		>
@@ -74,7 +74,7 @@
 		<input
 			v-if="!multiple"
 			class="kon-filter-input"
-			v-show="filterItems && filterInput"
+			v-show="filterItems && filterInput && isOpen"
 			type="text"
 			:placeholder="placeholder"
 			:value="internalSearch"
