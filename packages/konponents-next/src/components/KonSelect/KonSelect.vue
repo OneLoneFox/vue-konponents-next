@@ -295,11 +295,6 @@ type Props = {
 	 */
 	loadingProgress?: number;
 	/**
-	 * If set to true AND the `items` are an array of objects
-	 * the entire object will be returned
-	 */
-	returnObject?: boolean;
-	/**
 	 * The name to pass to the native input element.
 	 */
 	name?: string;
