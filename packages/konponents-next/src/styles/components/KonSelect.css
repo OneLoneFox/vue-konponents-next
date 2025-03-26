@@ -4,6 +4,7 @@
 	--component-foreground: var(--kon-on-surface);
 	--current-label-color: rgba(var(--foreground-color), 1);
 	--current-label-elevation-offset: 0;
+	display: flex;
 	position: relative;
 	padding: 8px 12px;
 	padding-right: 30px;
@@ -17,6 +18,14 @@
 	transition-timing-function: ease;
 	transition-duration: 250ms;
 	font-size: var(--font-size);
+
+	& .kon-placeholder,
+	.kon-filter-input,
+	.kon-value,
+	.kon-values {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
 
 	&:hover,
 	&:focus,
@@ -164,18 +173,19 @@
 
 	& .kon-placeholder+.kon-values {
 		position: absolute;
-		top: 0;
-		height: 100%;
+		align-self: center;
 	}
 
 	& .kon-placeholder {
 		opacity: 0.6;
 	}
 
-	&:not(.kon-multiple) .kon-filter-input {
-		position: absolute;
-		top: 0;
-		left: 0;
+	
+	&:not(.kon-multiple) {
+		& .kon-placeholder.kon-hidden,
+		& .kon-value.kon-hidden {
+			position: absolute;
+		}
 	}
 
 	& .kon-filter-input {
