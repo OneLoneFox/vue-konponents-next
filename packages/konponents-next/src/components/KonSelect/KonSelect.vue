@@ -402,6 +402,7 @@ const props = withDefaults(defineProps<Props>(), {
 	disabledItem: () => false,
 	disableOnLoading: true,
 	maxChips: 1,
+	clearSearchOnClose: true,
 });
 const emit = defineEmits<{
 	(e: "update:modelValue", value: T | T[]): void;
