@@ -702,7 +702,7 @@ function handleAfterDropdownLeave(){
 	}
 }
 
-watch(filteredItems, () => {
+watch([isOpen, filteredItems], () => {
 	if(!isOpen.value) return;
 	const el = optionsListEl.value?.$el as HTMLElement;
 	// Set initial explicit height
