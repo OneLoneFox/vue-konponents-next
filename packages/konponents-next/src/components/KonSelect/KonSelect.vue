@@ -3,6 +3,7 @@
 		class="kon-select"
 		:class="{
 			'kon-disabled': disabled,
+			'kon-loading': loading,
 			'kon-loading-disable': loading && disableOnLoading,
 			'kon-open': isOpen,
 			'kon-has-label': label,
@@ -133,6 +134,21 @@
 				<polyline points="6 9 12 15 18 9" />
 			</svg>
 		</div>
+		<KonProgressTransition>
+			<span class="kon-select-loader" v-if="loading">
+				<template v-if="$slots.loader">
+					<!-- Slot used for custom select loader -->
+					<slot name="loader" />
+				</template>
+				<template v-else>
+					<KonProgressCircular
+						:size="16"
+						:indeterminate="loadingProgress == undefined"
+						:value="loadingProgress"
+					/>
+				</template>
+			</span>
+		</KonProgressTransition>
 		<Teleport :to="popoverTarget ?? 'body'" :disabled="!popover">
 			<Transition name="kon-show-options" @before-enter="handleBeforeDropdownEnter" @after-leave="handleAfterDropdownLeave">
 				<div
@@ -208,6 +224,7 @@
 >
 import { computed, nextTick, onMounted, onUnmounted, provide, ref, shallowRef, useId, useTemplateRef, watch, watchEffect } from "vue";
 import KonOption from "./KonOption.vue";
+import KonProgressTransition from "../KonProgress/KonProgressTransition.vue";
 
 type ModelType = undefined | false extends M ? T : T[];
 type FilterFn = (items: T[], searchTerm: string) => T[];

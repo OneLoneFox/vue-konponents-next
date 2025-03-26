@@ -41,6 +41,10 @@
 		opacity: .6;
 	}
 
+	&.kon-loading-disable{
+		pointer-events: none;
+	}
+
 	& .kon-placeholder,
 	& .kon-value {
 		/* Allow it to have a z-index */
@@ -271,9 +275,23 @@
 		height: 100%;
 		color: rgba(var(--foreground-color), 1);
 		transform: rotate(0deg);
-		transition-property: transform;
+		transition-property: opacity, transform;
 		transition-duration: 250ms;
 		transition-timing-function: ease;
+	}
+
+	&.kon-loading > .chevron {
+		opacity: 0;
+	}
+
+	&>.kon-select-loader{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: 0;
+		right: 8px;
+		height: 100%;
 	}
 
 	&.open {
