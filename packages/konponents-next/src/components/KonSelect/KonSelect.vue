@@ -70,18 +70,20 @@
 			>
 				{{ getItemText(modelValue as T) }}
 			</span>
-			<input
-				class="kon-filter-input"
-				v-show="filterItems && filterInput && isOpen"
-				type="text"
-				:value="internalSearch"
-				@input="internalSearch = ($event.target as HTMLInputElement).value"
-				@keydown.stop="handleKeydown"
-				@blur.stop="handleBlur"
-				@change.stop=""
-				ref="filter-input"
-			>
 		</template>
+		<input
+			v-if="!multiple"
+			class="kon-filter-input"
+			v-show="filterItems && filterInput"
+			type="text"
+			:placeholder="placeholder"
+			:value="internalSearch"
+			@input="internalSearch = ($event.target as HTMLInputElement).value"
+			@keydown.stop="handleKeydown"
+			@blur.stop="handleBlur"
+			@change.stop=""
+			ref="filter-input"
+		>
 		<template v-if="multiple">
 			<TransitionGroup
 				name="kon-select-multiple-chips"
