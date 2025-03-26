@@ -511,8 +511,11 @@ const filteredItems = computed(() => {
 	if(!props.filterItems){
 		return props.items;
 	}
-	const itemsCopy = [...props.items];
 	const searchTerm = props.search ? props.search : internalSearch.value;
+	if(searchTerm.trim() == ""){
+		return props.items;
+	}
+	const itemsCopy = [...props.items];
 	return props.filterFn ? props.filterFn(itemsCopy, searchTerm) : defaultSearchFn(itemsCopy, searchTerm);
 });
 
