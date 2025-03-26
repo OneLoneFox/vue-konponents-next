@@ -454,6 +454,12 @@ const popoverStyles = computed(() => {
 });
 
 watchEffect(() => {
+	if(props.loading && props.disableOnLoading){
+		close();
+	}
+});
+
+watchEffect(() => {
 	if(props.popover){
 		window.addEventListener("resize", updatePopoverDropdown);
 	}else{
