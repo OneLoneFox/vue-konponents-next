@@ -403,6 +403,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits<{
 	(e: "update:modelValue", value: T | T[]): void;
+	(e: "update:searchTerm", value: string): void;
 	(e: "click", ev: MouseEvent): void;
 	(e: "blur", ev: FocusEvent): void;
 	(e: "keydown", ev: KeyboardEvent): void;
@@ -569,6 +570,13 @@ function open(){
 
 function close(){
 	isOpen.value = false;
+	if(props.filterItems && props.clearSearchOnClose && filterInputEl.value){
+		if(props.filterInput){
+			internalSearch.value = "";
+		}else{
+			emit("update:searchTerm", "");
+		}
+	}
 }
 
 function toggle(){
