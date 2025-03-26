@@ -199,9 +199,9 @@
 		background: none;
 		border: none;
 		z-index: 3;
-		&::placeholder{
-			color: rgba(var(--kon-on-surface-rgb), 0.6);
-		}
+	}
+	& .kon-filter-input::placeholder{
+		color: rgba(var(--kon-on-surface-rgb), 0.6);
 	}
 
 	&.kon-select-label-enter-active,
