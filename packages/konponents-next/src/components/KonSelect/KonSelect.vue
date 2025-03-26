@@ -89,7 +89,7 @@
 				class="kon-values"
 				@before-leave="handleBeforeChipLeave"
 			>
-				<template v-if="visibleChips.length == 0">
+				<template v-if="visibleChips.length == 0 && !(filterItems && filterInput)">
 					&nbsp;
 				</template>
 				<div
