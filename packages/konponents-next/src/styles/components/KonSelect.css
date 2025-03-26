@@ -41,7 +41,7 @@
 		opacity: .6;
 	}
 
-	&.kon-loading-disable{
+	&.kon-loading-disable {
 		pointer-events: none;
 	}
 
@@ -53,7 +53,6 @@
 		align-items: center;
 		color: var(--component-foreground);
 		opacity: 1;
-		transition: opacity 250ms ease;
 		/* Text must stay on top of the option menu to prevent getting occluded during the reveal transition */
 		z-index: 2;
 
@@ -177,13 +176,15 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 100%;
-		height: 100%;
+	}
+
+	& .kon-filter-input {
 		background: none;
 		border: none;
 		z-index: 3;
 		padding: 8px 12px;
 		color: rgb(var(--component-foreground));
+		font-size: var(--font-size);
 	}
 
 	&.kon-multiple .kon-filter-input {
@@ -191,16 +192,12 @@
 		flex: 1;
 		max-width: 100%;
 		min-width: 80px;
-		font-size: var(--font-size);
 		transition-property: opacity, transform;
 		transition-duration: 250ms;
 		transition-timing-function: ease;
-		color: var(--component-foreground);
-		background: none;
-		border: none;
-		z-index: 3;
 	}
-	& .kon-filter-input::placeholder{
+
+	& .kon-filter-input::placeholder {
 		color: rgba(var(--kon-on-surface-rgb), 0.6);
 	}
 
@@ -280,11 +277,11 @@
 		transition-timing-function: ease;
 	}
 
-	&.kon-loading > .chevron {
+	&.kon-loading>.chevron {
 		opacity: 0;
 	}
 
-	&>.kon-select-loader{
+	&>.kon-select-loader {
 		display: flex;
 		align-items: center;
 		justify-content: center;

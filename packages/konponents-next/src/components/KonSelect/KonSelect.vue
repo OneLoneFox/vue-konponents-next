@@ -65,7 +65,7 @@
 		<template v-else-if="!multiple">
 			<span
 				class="kon-value"
-				:class="{'kon-value-hidden': filterItems && filterInput && isOpen}"
+				:class="{'kon-hidden': filterItems && filterInput && isOpen}"
 				:key="`kon-label-${selectedValue}`"
 			>
 				{{ getItemText(modelValue as T) }}
