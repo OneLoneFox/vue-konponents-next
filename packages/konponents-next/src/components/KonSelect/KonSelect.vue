@@ -83,6 +83,7 @@
 			@blur.stop="handleBlur"
 			@change.stop=""
 			ref="filter-input"
+			tabindex="-1"
 		>
 		<template v-if="multiple">
 			<TransitionGroup
@@ -121,6 +122,7 @@
 					@blur.stop="handleBlur"
 					@change.stop=""
 					ref="filter-input"
+					tabindex="-1"
 				>
 			</TransitionGroup>
 		</template>
