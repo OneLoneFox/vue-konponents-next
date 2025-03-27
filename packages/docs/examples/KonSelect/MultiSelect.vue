@@ -1,16 +1,18 @@
 <template>
 	<KonSelect
-		placeholder="Select one"
+		placeholder="Select some"
 		v-model="value"
 		:items="items"
 		label="Social networks"
+		:multiple="true"
 	/>
 	<KonSelect
-		placeholder="Select one"
-		:model-value="undefined"
+		placeholder="Select some"
+		:model-value="['Facebook']"
 		:items="items"
 		label="Social networks"
 		:disabled="true"
+		:multiple="true"
 	/>
 </template>
 
@@ -19,5 +21,5 @@ import { KonSelect } from "konponents-next";
 import { ref } from "vue";
 
 const items = ref(["Facebook", "Twitter", "Instagram", "Tiktok"]);
-const value = ref();
+const value = ref([]);
 </script>

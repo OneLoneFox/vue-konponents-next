@@ -82,8 +82,8 @@ function toggleCode(){
 <style lang="scss">
 .doc-example {
 	position: relative;
-	background: var(--vp-c-bg-soft);
-	color: var(--vp-c-text-1);
+	background: var(--kon-surface);
+	color: var(--kon-on-surface);
 	padding: 20px 16px;
 	border-radius: 20px;
 	.focus-target{
@@ -105,7 +105,7 @@ function toggleCode(){
 	}
 	.content{
 		display: flex;
-		align-content: center;
+		align-items: center;
 		justify-content: center;
 		flex-wrap: wrap;
 		gap: 16px;

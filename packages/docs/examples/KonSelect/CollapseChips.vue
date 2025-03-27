@@ -4,13 +4,17 @@
 		v-model="value"
 		:items="items"
 		label="Social networks"
+		:multiple="true"
+		:collapse-chips="true"
 	/>
 	<KonSelect
-		placeholder="Select one"
-		:model-value="undefined"
+		placeholder="Select some"
+		v-model="value"
 		:items="items"
 		label="Social networks"
-		:disabled="true"
+		:multiple="true"
+		:collapse-chips="true"
+		:max-chips="3"
 	/>
 </template>
 
@@ -19,5 +23,5 @@ import { KonSelect } from "konponents-next";
 import { ref } from "vue";
 
 const items = ref(["Facebook", "Twitter", "Instagram", "Tiktok"]);
-const value = ref();
+const value = ref(["Facebook", "Twitter", "Instagram", "Tiktok"]);
 </script>
